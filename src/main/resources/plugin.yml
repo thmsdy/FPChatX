@@ -1,0 +1,72 @@
+name: FPChatX
+version: ${project.version}
+main: com.fpghoti.fpchatx.FPChat
+description: Chat plugin for 1.12+
+depend: [Vault]
+softdepend: [PlaceholderAPI]
+commands:
+  fpc:
+    aliases: [fpchat,ch]
+    description: Main FPChat command
+    usage: Wrong usage. For help, type /<command> help
+  shout:
+    aliases: [fyell, fshout, yell, y]
+    description: Send a global message to all players
+    usage: /shout message
+  spy:
+    description: Enables listening in on private messages
+    usage: /spy <on/off>
+  hush:
+    description: Disables a user's shout and tempchannel abilities
+    usage: /<command> player
+  unhush:
+    description: Re-enables a user's shout and tempchannel abilities
+    usage: /<command> player
+  badgelist:
+    aliases: [badges]
+    description: Pulls up a list of badges you own
+    usage: /<command> page#
+  badgeequip:
+    aliases: [equip]
+    description: equips a badge
+    usage: /<command> slot# badge#
+  badgeclear:
+    aliases: [badgesclear]
+    description: unequips all badges
+    usage: /<command>
+  msg:
+    aliases: [tell]
+    description: Starts or ends a private conversation
+    usage: /<command> player message
+  reply:
+    aliases: [r]
+    description: Replies to a private conversation
+    usage: /<command> message
+  ignore:
+    description: Ignores a player
+    usage: /<command> player
+  unignore:
+    description: Unignores a player.
+    usage: /<command> player
+  ignorelist:
+    description: Shows ignorelist
+    usage: /<command>
+  revokebadge:
+    description: Deletes synced badge in MySQL.
+    usage: /<command> player badge#
+  givebadge:
+    description: Grants player a badge.
+    usage: /<command> player badge#
+  shouttoggle:
+    aliases: [frankoffshout]
+    description: Toggles ability to see shout.
+    usage: /<command> player badge#
+  tempchat:
+    aliases: [tc]
+    description: Tempchat main command.
+    usage: /<command>
+  talk:
+    aliases: [tk]
+    description: Set main channel
+    usage: /<command> channel
+
