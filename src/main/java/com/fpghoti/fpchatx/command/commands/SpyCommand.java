@@ -17,7 +17,7 @@ public class SpyCommand extends Commands{
 		super(plugin);
 		name = "Spy";
 		description = "Toggles Spy mode";
-		syntax = ChatColor.GRAY + "/spy " + ChatColor.GOLD + "on/off";
+		syntax = ChatColor.GRAY + "/spy " + ChatColor.GOLD + "{on|off}";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("spy");

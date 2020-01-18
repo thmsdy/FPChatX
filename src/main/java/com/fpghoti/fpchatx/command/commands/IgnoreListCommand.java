@@ -20,7 +20,7 @@ public class IgnoreListCommand extends Commands {
 		super(plugin);
 		name = "Ignore List";
 		description = "Lists all players you have ignored";
-		syntax = ChatColor.GRAY + "/ignorelist " + ChatColor.GOLD + "[page#]";
+		syntax = ChatColor.GRAY + "/ignorelist " + ChatColor.GOLD + "[page number]";
 		minArgs = 0;
 		maxArgs = 1;
 		labels.add("fpc ignorelist");

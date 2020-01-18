@@ -14,7 +14,7 @@ public class ShoutCommand extends Commands {
 		super(plugin);
 		name = "Shout";
 		description = "Sends a chat message to every online player";
-		syntax = ChatColor.GRAY + "/shout " + ChatColor.GOLD + "msg";
+		syntax = ChatColor.GRAY + "/shout " + ChatColor.GOLD + "<message>";
 		minArgs = 0;
 		maxArgs = 100000;
 		labels.add("fpc shout");

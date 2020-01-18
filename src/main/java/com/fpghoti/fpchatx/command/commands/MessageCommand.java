@@ -18,7 +18,7 @@ public class MessageCommand extends Commands {
 		super(plugin);
 		name = "Message";
 		description = "Sends a private message to another player";
-		syntax = ChatColor.GRAY + "/msg " + ChatColor.GOLD + "player message";
+		syntax = ChatColor.GRAY + "/msg " + ChatColor.GOLD + "<player> <message>";
 		minArgs = 2;
 		maxArgs = 100000;
 		labels.add("msg");

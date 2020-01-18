@@ -18,7 +18,7 @@ public class GiveBadgeCommand extends Commands {
 		super(plugin);
 		name = "GiveBadge";
 		description = "Give player a badge";
-		syntax = ChatColor.GRAY + "/givebadge " + ChatColor.GOLD + "player badge#";
+		syntax = ChatColor.GRAY + "/givebadge " + ChatColor.GOLD + "<player> <badge number>";
 		minArgs = 2;
 		maxArgs = 2;
 		labels.add("fpc givebadge");

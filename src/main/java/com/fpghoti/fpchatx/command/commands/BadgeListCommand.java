@@ -16,7 +16,7 @@ public class BadgeListCommand extends Commands {
 		super(plugin);
 		name = "BadgeList";
 		description = "Pulls up a list of badges you own";
-		syntax = ChatColor.GRAY + "/badgelist " + ChatColor.GOLD + "[page#]";
+		syntax = ChatColor.GRAY + "/badgelist " + ChatColor.GOLD + "[page number]";
 		minArgs = 0;
 		maxArgs = 1;
 		labels.add("fpc badgelist");

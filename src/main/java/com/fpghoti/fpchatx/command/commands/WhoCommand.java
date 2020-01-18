@@ -19,7 +19,7 @@ public class WhoCommand extends Commands {
         super(plugin);
         name = "Who";
         description = "Lists all players in your primary channel";
-        syntax = ChatColor.GRAY + "/fpc who " + ChatColor.GOLD + "[page#]";
+        syntax = ChatColor.GRAY + "/fpc who " + ChatColor.GOLD + "[page number]";
         minArgs = 0;
         maxArgs = 1;
         labels.add("fpc who");

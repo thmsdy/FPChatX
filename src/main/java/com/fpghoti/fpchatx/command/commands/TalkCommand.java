@@ -22,7 +22,7 @@ public class TalkCommand extends Commands {
 		super(plugin);
 		name = "Talk";
 		description = "Talk in a specific channel";
-		syntax = ChatColor.GRAY + "/talk " + ChatColor.GOLD + "channel [msg]";
+		syntax = ChatColor.GRAY + "/talk " + ChatColor.GOLD + "<channel> [message]";
 		minArgs = 1;
 		maxArgs = 100000;
 		labels.add("fpc talk");

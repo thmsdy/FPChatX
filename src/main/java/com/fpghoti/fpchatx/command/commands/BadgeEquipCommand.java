@@ -18,7 +18,7 @@ public class BadgeEquipCommand extends Commands {
 		super(plugin);
 		name = "BadgeEquip";
 		description = "Equips badges for use in chat";
-		syntax = ChatColor.GRAY + "/equip " + ChatColor.GOLD + "slot# badge#";
+		syntax = ChatColor.GRAY + "/equip " + ChatColor.GOLD + "<slot number> <badge number>";
 		minArgs = 2;
 		maxArgs = 2;
 		labels.add("fpc badgeequip");

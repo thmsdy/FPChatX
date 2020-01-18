@@ -15,7 +15,7 @@ public class LeaveCommand extends Commands {
 		super(plugin);
 		name = "Leave";
 		description = "Leaves a channel";
-		syntax = ChatColor.GRAY + "/fpc leave " + ChatColor.GOLD + "channel";
+		syntax = ChatColor.GRAY + "/fpc leave " + ChatColor.GOLD + "<channel>";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("fpc leave");

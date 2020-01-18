@@ -18,7 +18,7 @@ public class KickCommand extends Commands {
 		super(plugin);
 		name = "Kick";
 		description = "Kicks a player from a channel";
-		syntax = ChatColor.GRAY + "/fpc kick " + ChatColor.GOLD + "channel player";
+		syntax = ChatColor.GRAY + "/fpc kick " + ChatColor.GOLD + "<channel> <player>";
 		minArgs = 2;
 		maxArgs = 2;
 		labels.add("fpc kick");

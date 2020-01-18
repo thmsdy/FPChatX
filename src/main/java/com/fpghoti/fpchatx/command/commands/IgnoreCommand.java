@@ -19,7 +19,7 @@ public class IgnoreCommand extends Commands {
 		super(plugin);
 		name = "Ignore";
 		description = "Ignores all messages from a player";
-		syntax = ChatColor.GRAY + "/ignore " + ChatColor.GOLD + "player";
+		syntax = ChatColor.GRAY + "/ignore " + ChatColor.GOLD + "<player>";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("fpc ignore");

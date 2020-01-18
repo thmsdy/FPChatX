@@ -18,7 +18,7 @@ public class UnignoreCommand extends Commands {
 		super(plugin);
 		name = "Unignore";
 		description = "Unignores all messages from a player";
-		syntax = ChatColor.GRAY + "/unignore " + ChatColor.GOLD + "player";
+		syntax = ChatColor.GRAY + "/unignore " + ChatColor.GOLD + "<player>";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("fpc unignore");

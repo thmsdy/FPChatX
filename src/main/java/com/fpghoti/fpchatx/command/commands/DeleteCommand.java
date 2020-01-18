@@ -17,7 +17,7 @@ public class DeleteCommand extends Commands {
 		super(plugin);
 		name = "Delete";
 		description = "Deletes a channel";
-		syntax = ChatColor.GRAY + "/fpc delete " + ChatColor.GOLD + "channel";
+		syntax = ChatColor.GRAY + "/fpc delete " + ChatColor.GOLD + "<channel>";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("fpc delete");

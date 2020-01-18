@@ -20,7 +20,7 @@ public class ChannelsCommand extends Commands {
 		super(plugin);
 		name = "Channels";
 		description = "Lists all open channels";
-		syntax = ChatColor.GRAY + "/fpc channels " + ChatColor.GOLD + "[page#]";
+		syntax = ChatColor.GRAY + "/fpc channels " + ChatColor.GOLD + "[page number]";
 		minArgs = 0;
 		maxArgs = 1;
 		labels.add("fpc channels");

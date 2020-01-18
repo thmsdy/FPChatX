@@ -15,7 +15,7 @@ public class HushCommand extends Commands {
 		super(plugin);
 		name = "Hush";
 		description = "Prevents a player from shouting";
-		syntax = ChatColor.GRAY + "/hush " + ChatColor.GOLD + "player";
+		syntax = ChatColor.GRAY + "/hush " + ChatColor.GOLD + "<player>";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("fpc hush");

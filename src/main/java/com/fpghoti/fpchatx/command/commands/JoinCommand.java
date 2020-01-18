@@ -15,7 +15,7 @@ public class JoinCommand extends Commands {
 		super(plugin);
 		name = "Join";
 		description = "Enters a channel";
-		syntax = ChatColor.GRAY + "/fpc join " + ChatColor.GOLD + "channel";
+		syntax = ChatColor.GRAY + "/fpc join " + ChatColor.GOLD + "<channel>";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("fpc join");

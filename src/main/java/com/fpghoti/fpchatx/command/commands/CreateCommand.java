@@ -21,7 +21,7 @@ public class CreateCommand extends Commands {
 		super(plugin);
 		name = "Create";
 		description = "Makes a new channel";
-		syntax = ChatColor.GRAY + "/fpc create " + ChatColor.GOLD + "<temp> name <flags>";
+		syntax = ChatColor.GRAY + "/fpc create " + ChatColor.GOLD + "[temp] <name> [flags]";
 		minArgs = 1;
 		maxArgs = 2 + validflags.length;
 		labels.add("fpc create");

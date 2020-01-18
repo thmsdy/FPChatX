@@ -15,7 +15,7 @@ public class ReplyCommand extends Commands {
 		super(plugin);
 		name = "Reply";
 		description = "Reply to a PM from another player";
-		syntax = ChatColor.GRAY + "/r " + ChatColor.GOLD + "message";
+		syntax = ChatColor.GRAY + "/r " + ChatColor.GOLD + "<message>";
 		minArgs = 1;
 		maxArgs = 10000;
 		labels.add("reply");

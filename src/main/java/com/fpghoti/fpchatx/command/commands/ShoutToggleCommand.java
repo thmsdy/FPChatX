@@ -15,7 +15,7 @@ public class ShoutToggleCommand extends Commands {
         super(plugin);
         name = "ShoutToggle";
         description = "Temporarily enables or disables shout";
-        syntax = ChatColor.GRAY + "/fpc shouttoggle " + ChatColor.GOLD + "channel";
+        syntax = ChatColor.GRAY + "/shouttoggle";
         minArgs = 0;
         maxArgs = 0;
         labels.add("fpc shouttoggle");

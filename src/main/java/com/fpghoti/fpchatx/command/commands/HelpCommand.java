@@ -18,7 +18,7 @@ public class HelpCommand extends Commands {
 		super(plugin);
 		name = "Help";
 		description = "Displays the help menu";
-		syntax = ChatColor.GRAY + "/fpc help " + ChatColor.GOLD + "page#";
+		syntax = ChatColor.GRAY + "/fpc help " + ChatColor.GOLD + "[page numer]";
 		minArgs = 0;
 		maxArgs = 1;
 		labels.add("fpc help");

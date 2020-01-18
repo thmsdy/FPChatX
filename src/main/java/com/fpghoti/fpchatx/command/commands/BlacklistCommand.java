@@ -21,7 +21,7 @@ public class BlacklistCommand extends Commands {
 		super(plugin);
 		name = "Blacklist";
 		description = "Toggles blacklisted status of a player in a specific channel";
-		syntax = ChatColor.GRAY + "/fpc blacklist " + ChatColor.GOLD + "channel player";
+		syntax = ChatColor.GRAY + "/fpc blacklist " + ChatColor.GOLD + "<channel> <player>";
 		minArgs = 1;
 		maxArgs = 2;
 		labels.add("fpc blacklist");

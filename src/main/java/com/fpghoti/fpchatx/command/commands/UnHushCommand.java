@@ -15,7 +15,7 @@ public class UnHushCommand extends Commands {
 		super(plugin);
 		name = "UnHush";
 		description = "Unhushes a player";
-		syntax = ChatColor.GRAY + "/unhush " + ChatColor.GOLD + "player";
+		syntax = ChatColor.GRAY + "/unhush " + ChatColor.GOLD + "<player>";
 		minArgs = 1;
 		maxArgs = 1;
 		labels.add("fpc unhush");

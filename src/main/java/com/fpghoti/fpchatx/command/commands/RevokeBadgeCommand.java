@@ -23,7 +23,7 @@ public class RevokeBadgeCommand extends Commands {
 		super(plugin);
 		name = "RevokeBadge";
 		description = "Revokes badge from player";
-		syntax = ChatColor.GRAY + "/revokebadge " + ChatColor.GOLD + "player badge#";
+		syntax = ChatColor.GRAY + "/revokebadge " + ChatColor.GOLD + "<player> <badge number>";
 		minArgs = 2;
 		maxArgs = 2;
 		labels.add("fpc revokebadge");
