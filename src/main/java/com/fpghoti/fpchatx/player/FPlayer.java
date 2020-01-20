@@ -286,6 +286,9 @@ public class FPlayer {
 	}
 
 	public Integer[] getBadges() {
+		if(badges[0] == null || badges[1] == null || badges[2] == null) {
+			badges = BadgeGetter.getBadges(this);
+		}
 		return this.badges;
 	}
 

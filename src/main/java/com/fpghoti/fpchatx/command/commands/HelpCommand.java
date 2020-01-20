@@ -78,7 +78,7 @@ public class HelpCommand extends Commands {
 			FPlayer.plainMsg(p,ctype);
 			FPlayer.plainMsg(p,online);
 			FPlayer.plainMsg(p,ChatColor.GRAY + "Use " + ChatColor.WHITE + "/fpc who " + ChatColor.GRAY + "to see who is in this channel.");
-			FPlayer.plainMsg(p, ChatColor.GRAY + "Use " + ChatColor.WHITE + "/fpc help page# " + ChatColor.GRAY + "for a list of commands.");
+			FPlayer.plainMsg(p, ChatColor.GRAY + "Use " + ChatColor.WHITE + "/fpc help <page number> " + ChatColor.GRAY + "for a list of commands.");
 			return;
 		}
 		FPlayer.plainMsg(p, ChatColor.GOLD + "[" + Integer.toString(pg) + "/" + Integer.toString(pageCount) + "] "  + ChatColor.YELLOW + "FPChatX Commands:");

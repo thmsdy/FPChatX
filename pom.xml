@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>FPChatX</groupId>
 	<artifactId>FPChatX</artifactId>
-	<version>1.0.1-BETA</version>
+	<version>1.0.2-BETA</version>
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
