@@ -499,7 +499,7 @@ public class FPlayer {
 		}
 		
 		if(hushed) {
-			FPlayer.errMsg(this, "You are hushed.");
+			FPlayer.errMsg(this, "You are unable to perform this action, because you have been hushed.");
 		}
 		
 		if(isOnline() && (shoutCooldown == 0 || !FPChat.getPlugin().getMainConfig().shoutCooldownEnabled() ) && !isHushed()) {
