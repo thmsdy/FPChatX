@@ -27,7 +27,7 @@ public class BadgeList {
 	
 	public static void badgeList(FPlayer p , int page){
 		p.sendMessage("");
-		p.sendMessage(ChatColor.RED + "HOW TO USE:" + ChatColor.YELLOW + " You can equip badges with " + ChatColor.DARK_AQUA + "/equip slot# badge#" + ChatColor.YELLOW +". To unequip all badges, use " + ChatColor.DARK_AQUA + "/badgesclear" + ChatColor.YELLOW + ".");
+		p.sendMessage(ChatColor.RED + "HOW TO USE:" + ChatColor.YELLOW + " You can equip badges with " + ChatColor.DARK_AQUA + "/equip <slot number> <badge number>" + ChatColor.YELLOW +". To unequip all badges, use " + ChatColor.DARK_AQUA + "/badgesclear" + ChatColor.YELLOW + ".");
 		p.sendMessage(ChatColor.AQUA + "------------------- Your Badges -------------------");
 		p.sendMessage("");
 		int eventnum = 0;
