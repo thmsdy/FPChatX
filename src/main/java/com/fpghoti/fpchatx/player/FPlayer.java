@@ -273,6 +273,22 @@ public class FPlayer {
 		this.shoutVisible = false;
 	}
 
+	public boolean setPrefix(String prefix) {
+		if(isOnline() && getPlayer() != null) {
+			VaultUtil.chat.setPlayerPrefix(getPlayer(), prefix);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean setSuffix(String suffix) {
+		if(isOnline() && getPlayer() != null) {
+			VaultUtil.chat.setPlayerPrefix(getPlayer(), suffix);
+			return true;
+		}
+		return false;
+	}
+
 	public boolean isHushed() {
 		return this.hushed;
 	}
@@ -497,11 +513,11 @@ public class FPlayer {
 			}
 			FPlayer.errMsg(this, "You must wait " + Integer.toString(i) + time + "before you can shout again.");
 		}
-		
+
 		if(hushed) {
 			FPlayer.errMsg(this, "You are unable to perform this action, because you have been hushed.");
 		}
-		
+
 		if(isOnline() && (shoutCooldown == 0 || !FPChat.getPlugin().getMainConfig().shoutCooldownEnabled() ) && !isHushed()) {
 			if(Permission.canShout(this)) {
 				Player p = Bukkit.getPlayer(uuid);

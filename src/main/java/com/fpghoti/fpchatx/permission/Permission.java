@@ -18,6 +18,30 @@ public class Permission {
 		return false;
 	}
 	
+	public static boolean canChangePrefix(FPlayer p) {
+		return p.hasPermission("fpchat.changeprefix");
+	}
+	
+	public static boolean canChangePrefix(String playername) {
+		if(FPlayer.getPlayer(playername) != null) {
+			FPlayer p = FPlayer.getPlayer(playername);
+			return canChangePrefix(p);
+		}
+		return false;
+	}
+	
+	public static boolean canChangeSuffix(FPlayer p) {
+		return p.hasPermission("fpchat.changesuffix");
+	}
+	
+	public static boolean canChangeSuffix(String playername) {
+		if(FPlayer.getPlayer(playername) != null) {
+			FPlayer p = FPlayer.getPlayer(playername);
+			return canChangeSuffix(p);
+		}
+		return false;
+	}
+	
 	public static boolean canShoutColor(FPlayer p) {
 		return p.hasPermission("fpchat.shoutcolor");
 	}
