@@ -51,7 +51,8 @@ public class MessageCommand extends Commands {
 				FPlayer.errMsg(p, Permission.noPerm);
 			}
 		}else {
-			String msg = ChatColor.GREEN + "PM from CONSOLE: " + ChatColor.GRAY;
+			String header = ChatColor.GREEN + "PM from CONSOLE: " + ChatColor.GRAY;
+			String msg = "";
             String last = args[args.length - 1];
             for(int i = 1; i < args.length - 1; i++) {
             	msg = msg + args[i] + " ";
@@ -62,7 +63,7 @@ public class MessageCommand extends Commands {
             if(target == null) {
             	FPlayer.errMsg(null,"Invalid player.");
             }else {
-            	target.sendMessage(msg);
+            	target.sendMessage(header + msg);
             	plugin.log(Level.INFO, ChatColor.GREEN + "PM to " + target.getName() + ": " + ChatColor.GRAY + msg);
             }
 		}
