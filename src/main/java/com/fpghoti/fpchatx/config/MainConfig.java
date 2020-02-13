@@ -97,6 +97,14 @@ public class MainConfig {
 			config.createSection("NaughtyWords");
 			config.set("NaughtyWords", "word1,word2,word3");
 		}
+		if (config.get("PrefixFilter")==null){
+			config.createSection("PrefixFilter");
+			config.set("PrefixFilter", false);
+		}
+		if (config.get("PrefixNaughtyWords")==null){
+			config.createSection("PrefixNaughtyWords");
+			config.set("PrefixNaughtyWords", "trusted,helper,mod,admin");
+		}
 		if (config.get("FrankMode")==null){
 			config.createSection("FrankMode");
 			config.set("FrankMode", false);
@@ -228,7 +236,15 @@ public class MainConfig {
 	}
 
 	public String getNaughtyWords() {
-		return config.getString("NaughtyWords");
+		return config.getString("NaughtyWords").replace(" ", "");
+	}
+	
+	public boolean prefixFilterEnabled() {
+		return config.getBoolean("PrefixFilter");
+	}
+
+	public String getPrefixNaughtyWords() {
+		return config.getString("PrefixNaughtyWords").replace(" ", "");
 	}
 
 	public boolean frankModeEnabled() {

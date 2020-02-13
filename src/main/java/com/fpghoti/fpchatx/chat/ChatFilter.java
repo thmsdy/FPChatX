@@ -5,15 +5,29 @@ import java.util.ArrayList;
 import org.bukkit.ChatColor;
 
 import com.fpghoti.fpchatx.FPChat;
+import com.fpghoti.fpchatx.permission.Permission;
+import com.fpghoti.fpchatx.player.FPlayer;
 
 public class ChatFilter {
 
 	public static ArrayList<String> filtered = null;
+	public static ArrayList<String> prefixfilter = null;
 
-	//CHAT FILTER
+	public static String[] suffixes = {"ing","s","ed","er","es","y","ers","ier","iest","ies","ys"};
 
-	public static String filter(String sentence){  // THIS FUNCTION TAKES THE RAW CHAT MESSAGE AND SENDS EACH 
-		String msg = sentence;                     // INDIVIDUAL WORD INTO THE FILTER WORD FUNCTION BELOW
+	public static void loadFilter() {
+		filtered = new ArrayList<String>();
+		for(String s : FPChat.getPlugin().getMainConfig().getNaughtyWords().split(",")) {
+			filtered.add(s);
+		}
+		prefixfilter = new ArrayList<String>();
+		for(String s : FPChat.getPlugin().getMainConfig().getPrefixNaughtyWords().split(",")) {
+			prefixfilter.add(s);
+		}
+	}
+
+	public static String filter(String sentence){
+		String msg = sentence;
 		if(FPChat.getPlugin().getMainConfig().chatFilterEnabled()){
 			msg = "";
 			int i = 0;
@@ -27,61 +41,106 @@ public class ChatFilter {
 		return msg;
 	}
 
-	public static String filterWord(String word){             // THIS TAKES THE WORD, LOWERCASES IT,
-		String wordp = "";                                // AND REPLACES CHARACTERS "1" and "!" with "i", "5" with "s", "6" with "g", and
-		if(FPChat.getPlugin().getMainConfig().chatFilterEnabled()){    // "3" with "e". It then compares it to the list of
-			String word2 = word.toLowerCase();                // Naughty words and replaces it with "Frank" or "bleep" if a match is found
-			String color = ChatColor.getLastColors(word2);
-			if(word2.length() >= 2 && word2.charAt(word2.length() -1) == '!'){
-				for(int i = 0; i < word2.length() -1; i++ ){
-					wordp += word2.charAt(i);
+	public static String filterWord(String word) {
+		if(FPChat.getPlugin().getMainConfig().chatFilterEnabled()) {
+			String color = ChatColor.getLastColors(word);
+			String[] match = findMatchPair(word, filtered);
+			if(match != null) {
+				String suffix = match[1];
+				if(suffix == null) {
+					suffix = "";
 				}
-				word2 = wordp;
+				return color + getReplacement() + suffix;
 			}
-			wordp = "";
-			for(int i = 0; i < word2.length(); i++ ){
-				if(word2.charAt(i) != '!'){
-					wordp += word2.charAt(i);
-				}else{
-					wordp += 'i';
-				}
-			}
-			word2 = wordp;
-			word2 = ChatColor.translateAlternateColorCodes('§', word2);
-			word2 = ChatColor.translateAlternateColorCodes('&', word2);
-			word2 = ChatColor.stripColor(word2);
-			word2 = word2.replaceAll("\\p{Punct}+", "").replaceAll("1", "i").replaceAll("5", "s").replaceAll("6", "g").replaceAll("3", "e");
-			if(filtered == null) {
-				filtered = new ArrayList<String>();
-				for(String s : FPChat.getPlugin().getMainConfig().getNaughtyWords().split(",")) {
-					filtered.add(s);
-				}
-			}
-
-			for(String item : filtered){
-				if(ChatColor.stripColor(word2).equalsIgnoreCase(item) || ChatColor.stripColor(word2).equalsIgnoreCase(item + "s")){
-					if (word2.length() > 2) {
-						if(word2.substring(word2.length() - 3).equalsIgnoreCase("ing")){
-							word = "bleeping";
-							if(FPChat.getPlugin().getMainConfig().frankModeEnabled()){
-								word = "Franking";
-							}
-						}else{
-							word = "bleep";
-							if(FPChat.getPlugin().getMainConfig().frankModeEnabled()){
-								word = "Frank";
-							}
-						}
-					}
-				}
-				word = color + word;
-			}
-			word2 = null;
 		}
 		return word;
 	}
 
+	public static String filterPrefix(FPlayer p, String prefix) {
+		if(FPChat.getPlugin().getMainConfig().prefixFilterEnabled()) {
+			String color = ChatColor.getLastColors(prefix);
+			String[] match = findMatchPair(prefix, prefixfilter);
+			if(match != null) {
+				String found = match[0];
+				String suffix = match[1];
+				if(suffix == null) {
+					suffix = "";
+				}
+				if(!Permission.canUseWordInPrefix(p, found)) {
+					return color + getReplacement() + suffix;
+				}
+			}
+		}
+		return prefix;
+	}
 
-	// By the end of the loop, the sentence is reconstructed with the naughty words replaced
+	public static String getReplacement() {
+		if(FPChat.getPlugin().getMainConfig().frankModeEnabled()){
+			return "Frank";
+		}
+		return "bleep";
+	}
+
+	public static String findMatch(String word, ArrayList<String> filter) {
+		String[] match = findMatchPair(word,filter);
+		if(match == null || match[0] == null) {
+			return null;
+		}
+		return match[0];
+	}
+
+	public static String[] findMatchPair(String word, ArrayList<String> filter) {
+		String cleaned = "";
+		word = word.toLowerCase();
+		if(word.length() >= 2 && word.charAt(word.length() -1) == '!'){
+			for(int i = 0; i < word.length() -1; i++ ){
+				cleaned += word.charAt(i);
+			}
+			word = cleaned;
+		}
+		cleaned = "";
+		for(int i = 0; i < word.length(); i++ ){
+			if(word.charAt(i) != '!'){
+				cleaned += word.charAt(i);
+			}else{
+				cleaned += 'i';
+			}
+		}
+		cleaned = ChatColor.translateAlternateColorCodes('§', cleaned);
+		cleaned = ChatColor.translateAlternateColorCodes('&', cleaned);
+		cleaned = ChatColor.stripColor(cleaned);
+		cleaned = cleaned.replace(" ", "");
+		cleaned = cleaned.replaceAll("\\p{Punct}+", "").replaceAll("1", "i").replaceAll("5", "s").replaceAll("6", "g").replaceAll("3", "e").replaceAll("0", "o").replaceAll("9", "g").replaceAll("8", "b");
+		if(cleaned.equals("")) {
+			return null;
+		}
+		String[] wordSuf = {null,null};
+		for(String item : filter) {
+			if(cleaned.equalsIgnoreCase(item)){
+				wordSuf[0] = item;
+				return wordSuf;
+			}
+			for(String suffix : suffixes) {
+				if(cleaned.equalsIgnoreCase(item + suffix)){
+					wordSuf[0] = item;
+					wordSuf[1] = suffix;
+					return wordSuf;
+				}
+				String last = item.substring(item.length() - 1);
+				if(cleaned.equalsIgnoreCase(item + last + suffix)){
+					wordSuf[0] = item;
+					wordSuf[1] = last + suffix;
+					return wordSuf;
+				}
+				if(cleaned.equalsIgnoreCase(item + last + last + suffix)){
+					wordSuf[0] = item;
+					wordSuf[1] = last + last + suffix;
+					return wordSuf;
+				}
+			}
+
+		}
+		return null;
+	}
 
 }

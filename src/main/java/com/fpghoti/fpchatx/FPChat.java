@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import com.fpghoti.fpchatx.badge.BadgeList;
 import com.fpghoti.fpchatx.chat.ChatChannel;
+import com.fpghoti.fpchatx.chat.ChatFilter;
 import com.fpghoti.fpchatx.chat.ShoutChannel;
 import com.fpghoti.fpchatx.command.Commands;
 import com.fpghoti.fpchatx.command.commands.BadgeClearCommand;
@@ -89,6 +90,7 @@ public class FPChat extends JavaPlugin {
 			BadgeList.badgelist.put(i, BadgeList.badgelist.get(i).replace("&", "§"));
 		}
 		cache = new PlayerCache(this);
+		ChatFilter.loadFilter();
 		for(Player bp : Bukkit.getOnlinePlayers()){
 			FPlayer.getPlayer(bp);
 		}
@@ -133,6 +135,7 @@ public class FPChat extends JavaPlugin {
 			BadgeList.badgelist.put(i, BadgeList.badgelist.get(i).replace("&", "§"));
 		}
 		cache = new PlayerCache(this);
+		ChatFilter.loadFilter();
 		for(Player bp : Bukkit.getOnlinePlayers()){
 			FPlayer.getPlayer(bp);
 		}

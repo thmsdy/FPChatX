@@ -5,6 +5,18 @@ import com.fpghoti.fpchatx.player.FPlayer;
 public class Permission {
 	
 	public static String noPerm = "You lack the permission required to perform this action.";
+	
+	public static boolean canUseWordInPrefix(FPlayer p, String word) {
+		return p.hasPermission("fpchat.prefix." + word.toLowerCase());
+	}
+	
+	public static boolean canUseWordInPrefix(String playername, String word) {
+		if(FPlayer.getPlayer(playername) != null) {
+			FPlayer p = FPlayer.getPlayer(playername);
+			return canUseWordInPrefix(p, word);
+		}
+		return false;
+	}
 
 	public static boolean canUseColor(FPlayer p) {
 		return p.hasPermission("fpchat.colorcodes");

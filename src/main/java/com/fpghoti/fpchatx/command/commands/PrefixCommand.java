@@ -40,6 +40,7 @@ public class PrefixCommand extends Commands {
 
 		if(Permission.canChangePrefix(p)){
 			String prefix = ChatColor.translateAlternateColorCodes('&', ChatFilter.filterWord(args[0]));
+			prefix = ChatFilter.filterPrefix(p, prefix);
 			if(Permission.canChangePrefix(p)) {
 				p.setPrefix(prefix);
 				FPlayer.goodMsg(p, "Set prefix to: " + prefix);

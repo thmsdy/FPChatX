@@ -131,7 +131,7 @@ public class PlayerFile {
 	}
 
 	public String getIgnore() {
-		return config.getString("Ignore");
+		return config.getString("Ignore").replace(" ", "");
 	}
 
 	public void saveIgnore(String ignore) throws IOException {

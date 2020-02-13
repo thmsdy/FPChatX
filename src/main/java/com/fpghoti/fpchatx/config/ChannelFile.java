@@ -172,7 +172,7 @@ public class ChannelFile {
 	}
 
 	public String getWhitelistedPermissionNode() {
-		return config.getString("WhitelistedPermissionNode");
+		return config.getString("WhitelistedPermissionNode").replace(" ", "");
 	}
 
 	public void saveWhitelistedPermissionNode(String perm) throws IOException{
@@ -208,7 +208,7 @@ public class ChannelFile {
 	}
 
 	public String getBannedUUIDs() {
-		return config.getString("BannedUUIDs");
+		return config.getString("BannedUUIDs").replace(" ", "");
 	}
 
 	public void saveBannedUUIDs(String uuids) throws IOException {

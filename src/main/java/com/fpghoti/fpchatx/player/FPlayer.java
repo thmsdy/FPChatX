@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -275,7 +276,8 @@ public class FPlayer {
 
 	public boolean setPrefix(String prefix) {
 		if(isOnline() && getPlayer() != null) {
-			VaultUtil.chat.setPlayerPrefix(getPlayer(), prefix);
+			World world = null;
+			VaultUtil.chat.setPlayerPrefix(world, name, prefix);
 			return true;
 		}
 		return false;
