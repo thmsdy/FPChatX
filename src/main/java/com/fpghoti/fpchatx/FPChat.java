@@ -64,7 +64,7 @@ public class FPChat extends JavaPlugin {
 	private BukkitTask refresh = null;
 	private PlayerListener listener = null;
 	private PlayerCache cache;
-	
+
 	public void onEnable() {
 		plugin = this;
 		VaultUtil vault = new VaultUtil(this);
@@ -115,7 +115,10 @@ public class FPChat extends JavaPlugin {
 			refresh.cancel();
 		}
 
-		sql.disconnect();
+		if(config.mySQLEnabled()) {
+			sql.disconnect();
+		}
+		
 		for(FPlayer p : FPlayer.getPlayers()) {
 			p.cleanup();
 		}
@@ -185,7 +188,7 @@ public class FPChat extends JavaPlugin {
 	public MainConfig getMainConfig() {
 		return this.config;
 	}
-	
+
 	public PlayerCache getPlayerCache() {
 		return this.cache;
 	}

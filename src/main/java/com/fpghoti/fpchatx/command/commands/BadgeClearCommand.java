@@ -31,6 +31,13 @@ public class BadgeClearCommand extends Commands {
 			FPlayer.errMsg(null, "This command is for players only.");
 			return;
 		}
+		
+
+		if(!plugin.getMainConfig().mySQLEnabled()) {
+			FPlayer.errMsg(null, "MySQL is not enabled.");
+			return;
+		}
+		
 		FPlayer p = FPlayer.getPlayer((Player)sender);
 		BadgeSet.setBadge(p, 1, 0);
 		BadgeSet.setBadge(p, 2, 0);

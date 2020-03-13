@@ -32,6 +32,12 @@ public class BadgeListCommand extends Commands {
 			FPlayer.errMsg(null, "This command is for players only.");
 			return;
 		}
+
+		if(!plugin.getMainConfig().mySQLEnabled()) {
+			FPlayer.errMsg(null, "MySQL is not enabled.");
+			return;
+		}
+		
 		FPlayer p = FPlayer.getPlayer((Player)sender);
 		if(args.length == 0 || !Util.isDigit(args[0])){
 			BadgeList.badgeList(p, 1);

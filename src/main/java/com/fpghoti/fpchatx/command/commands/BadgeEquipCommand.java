@@ -35,6 +35,11 @@ public class BadgeEquipCommand extends Commands {
 			return;
 		}
 		
+		if(!plugin.getMainConfig().mySQLEnabled()) {
+			FPlayer.errMsg(null, "MySQL is not enabled.");
+			return;
+		}
+		
 		FPlayer p = FPlayer.getPlayer((Player)sender);
 		if(Util.isDigit(args[0]) && Util.isDigit(args[1])){
 
