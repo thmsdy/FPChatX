@@ -5,9 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
-import com.fpghoti.fpchatx.badge.BadgeGetter;
-import com.fpghoti.fpchatx.badge.BadgeList;
-import com.fpghoti.fpchatx.badge.BadgeSet;
+import com.fpghoti.fpchatx.badge.Badge;
 import com.fpghoti.fpchatx.command.Commands;
 import com.fpghoti.fpchatx.player.FPlayer;
 import com.fpghoti.fpchatx.util.Util;
@@ -44,9 +42,9 @@ public class BadgeEquipCommand extends Commands {
 		if(Util.isDigit(args[0]) && Util.isDigit(args[1])){
 
 			Integer slot = Integer.parseInt(args[0]), badgeId = Integer.parseInt(args[1]);
-			if(BadgeGetter.canUseSlot(p, slot)){
-				if(BadgeList.badgelist.containsKey(badgeId) && BadgeGetter.hasBadge(p, badgeId)){
-					BadgeSet.setBadge(p, slot, badgeId);
+			if(p.canUseSlot(slot)){
+				if(Badge.getList().containsId(badgeId) && Badge.getList().get(badgeId).isEnabled() && p.hasBadge(badgeId)){
+					p.setBadge(slot, badgeId);
 					p.updateBadges(slot, badgeId);
 					p.sendMessage( FPChat.logo() + ChatColor.YELLOW + " You have equipped a badge!");
 				}else{

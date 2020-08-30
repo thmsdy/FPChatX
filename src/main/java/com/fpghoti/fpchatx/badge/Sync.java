@@ -1,10 +1,47 @@
 package com.fpghoti.fpchatx.badge;
 
+import java.util.UUID;
+
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.player.FPlayer;
 import com.fpghoti.fpchatx.util.Util;
 
-public class SyncSet {
+public class Sync {
+	
+	public static void syncBadges(FPlayer p, boolean create){
+		UUID id = p.getUniqueId();
+		String uuid = id.toString();
+		Util.connect();
+		if(create && !FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable())){
+			createPlayer(p);
+		}
+		String raw = (String) FPChat.getPlugin().getMySQLConnection().get("badges", "player_uuid", "=", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable());
+		if(raw != null && raw.length() > 0 && raw.charAt(0) == ','){
+			raw = raw.substring(1);
+		}
+		if(raw != null && !raw.equals("")) {
+			String list[] = Util.stripLast(raw).split(",");
+			for(String item : list) {
+				if(!item.equals("")) {
+					Integer badgeId = Integer.parseInt(item);
+					p.addSyncedBadge(badgeId);
+				}
+			}
+		}
+	}
+
+	public static Boolean syncExists(FPlayer p){
+		Boolean check = false;
+		if(p == null) {
+			return false;
+		}
+		String uuid = p.getUniqueId().toString();
+		Util.connect();
+		if(FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable())){
+			check = true;
+		}
+		return check;
+	}
 
 	public static void update(FPlayer p) {
 		update(p, true);
@@ -16,7 +53,7 @@ public class SyncSet {
 		if(create && !FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable())){
 			createPlayer(p);
 		}
-		SyncGetter.syncBadges(p, false);
+		syncBadges(p, false);
 		String nl = "";
 		String nl2 = "";
 		String permstring = getBadgeString(p);
@@ -35,7 +72,7 @@ public class SyncSet {
 		}
 		nl = nl + nl2;
 		FPChat.getPlugin().getMySQLConnection().set("badges", nl, "player_uuid", "=", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable());
-		SyncGetter.syncBadges(p,false);
+		syncBadges(p,false);
 	}
 	
 	public static void revoke(FPlayer p) {
@@ -48,10 +85,10 @@ public class SyncSet {
 		if(create && !FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable())){
 			createPlayer(p);
 		}
-		SyncGetter.syncBadges(p, false);
+		syncBadges(p, false);
 		String nl = "";
 		FPChat.getPlugin().getMySQLConnection().set("badges", nl, "player_uuid", "=", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable());
-		SyncGetter.syncBadges(p, false);
+		syncBadges(p, false);
 	}
 	public static void revoke(FPlayer p, int badgeId){
 		revoke(p, badgeId, true);
@@ -64,7 +101,7 @@ public class SyncSet {
 		if(create && !FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable())){
 			createPlayer(p);
 		}
-		SyncGetter.syncBadges(p,  false);
+		syncBadges(p,  false);
 		String nl = "";
 		String nl2 = "";
 		for(String item : revokeBadgeString(p, badgeId).split(",")){
@@ -83,19 +120,20 @@ public class SyncSet {
 		}
 		nl = nl + nl2;
 		FPChat.getPlugin().getMySQLConnection().set("badges", nl, "player_uuid", "=", uuid, FPChat.getPlugin().getMainConfig().getPermSyncTable());
-		SyncGetter.syncBadges(p, false);
+		syncBadges(p, false);
 	}
-
+	
 	public static String getBadgeString(FPlayer p){
 		String list = "";
-		for(int i = 1; i < BadgeList.badgeperm.size(); i++){
-			if(p.hasPermission("fpchat.badge" + BadgeList.badgeperm.get(i))){
-				String add = Integer.toString(i) + ",";
+		for(Badge badge : Badge.getList()){
+			int id = badge.getId();
+			if(badge.isEnabled() && p.hasPermission("fpchat.badge." + badge.getPerm())){
+				String add = Integer.toString(id) + ",";
 				list = list + add;
-			}else if(p.getBadgeQueue().contains(i)) {
-				String add = Integer.toString(i) + ",";
+			}else if(p.getBadgeQueue().contains(id)) {
+				String add = Integer.toString(id) + ",";
 				list = list + add;
-				p.unqueueBadge(i);
+				p.unqueueBadge(id);
 			}
 		}
 
@@ -104,10 +142,11 @@ public class SyncSet {
 
 	public static String revokeBadgeString(FPlayer p, int badgeId){
 		String list = "";
-		for(int i = 1; i < BadgeList.badgeperm.size(); i++){
-			if(p.hasPermission("fpchat.badge" + BadgeList.badgeperm.get(i))){
-				if(i != badgeId){
-					String add = Integer.toString(i) + ",";
+		for(Badge badge : Badge.getList()){
+			int id = badge.getId();
+			if(p.hasPermission("fpchat.badge." + badge.getPerm())){
+				if(id != badgeId){
+					String add = Integer.toString(id) + ",";
 					list = list + add;
 				}
 			}

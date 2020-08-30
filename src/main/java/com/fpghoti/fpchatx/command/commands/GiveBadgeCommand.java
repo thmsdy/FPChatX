@@ -5,8 +5,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
-import com.fpghoti.fpchatx.badge.BadgeList;
-import com.fpghoti.fpchatx.badge.SyncSet;
+import com.fpghoti.fpchatx.badge.Badge;
+import com.fpghoti.fpchatx.badge.Sync;
 import com.fpghoti.fpchatx.command.Commands;
 import com.fpghoti.fpchatx.permission.Permission;
 import com.fpghoti.fpchatx.player.FPlayer;
@@ -45,10 +45,10 @@ public class GiveBadgeCommand extends Commands {
 				FPlayer.errMsg(p,"That player cannot be found.");
 				return;
 			}
-			if(Util.isDigit(args[1]) && BadgeList.badgeperm.containsKey(Integer.parseInt(args[1]))) {
+			if(Util.isDigit(args[1]) && Badge.getList().containsId(Integer.parseInt(args[1]))) {
 				int id = Integer.parseInt(args[1]);
 				toGive.queueBadgeAdd(id);
-				SyncSet.update(toGive);
+				Sync.update(toGive);
 				toGive.addSyncedBadge(id);
 				FPlayer.goodMsg(p, "Badge granted.");
 			}else {

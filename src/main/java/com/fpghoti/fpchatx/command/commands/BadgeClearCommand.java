@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
-import com.fpghoti.fpchatx.badge.BadgeSet;
 import com.fpghoti.fpchatx.command.Commands;
 import com.fpghoti.fpchatx.player.FPlayer;
 
@@ -39,9 +38,9 @@ public class BadgeClearCommand extends Commands {
 		}
 		
 		FPlayer p = FPlayer.getPlayer((Player)sender);
-		BadgeSet.setBadge(p, 1, 0);
-		BadgeSet.setBadge(p, 2, 0);
-		BadgeSet.setBadge(p, 3, 0);
+		p.setBadge(1, 0);
+		p.setBadge(2, 0);
+		p.setBadge(3, 0);
 		p.sendMessage(FPChat.logo() + ChatColor.YELLOW + " Unequipped all badges!");
 	}
 

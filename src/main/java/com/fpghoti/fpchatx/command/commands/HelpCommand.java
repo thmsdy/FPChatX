@@ -72,7 +72,7 @@ public class HelpCommand extends Commands {
 		ctype = ChatColor.DARK_AQUA + "Channel Type: " + ChatColor.GREEN + ctype;
 		String online = ChatColor.DARK_AQUA + "Members Online: " + ChatColor.GREEN + ccount;
 		if(args.length == 0) {
-			FPlayer.plainMsg(p, ChatColor.GOLD + "[INFO] "  + ChatColor.YELLOW + "FPChatX:");
+			FPlayer.plainMsg(p, ChatColor.GOLD + "[INFO] "  + ChatColor.YELLOW + "FPChat:");
 			FPlayer.plainMsg(p,name);
 			FPlayer.plainMsg(p,primary);
 			FPlayer.plainMsg(p,ctype);
@@ -81,7 +81,7 @@ public class HelpCommand extends Commands {
 			FPlayer.plainMsg(p, ChatColor.GRAY + "Use " + ChatColor.WHITE + "/fpc help <page number> " + ChatColor.GRAY + "for a list of commands.");
 			return;
 		}
-		FPlayer.plainMsg(p, ChatColor.GOLD + "[" + Integer.toString(pg) + "/" + Integer.toString(pageCount) + "] "  + ChatColor.YELLOW + "FPChatX Commands:");
+		FPlayer.plainMsg(p, ChatColor.GOLD + "[" + Integer.toString(pg) + "/" + Integer.toString(pageCount) + "] "  + ChatColor.YELLOW + "FPChat Commands:");
 		for (int i = 0; i < 8; i++) {
 			int index = (pg - 1) * 8 + i;
 			if (index < commands.size()) {

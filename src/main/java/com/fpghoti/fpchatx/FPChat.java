@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import com.fpghoti.fpchatx.badge.BadgeList;
+import com.fpghoti.fpchatx.badge.Badge;
 import com.fpghoti.fpchatx.chat.ChatChannel;
 import com.fpghoti.fpchatx.chat.ChatFilter;
 import com.fpghoti.fpchatx.chat.ShoutChannel;
@@ -54,9 +54,7 @@ import com.fpghoti.fpchatx.player.FPlayer;
 import com.fpghoti.fpchatx.util.VaultUtil;
 
 public class FPChat extends JavaPlugin {
-
-	private static Logger log = Logger.getLogger("Minecraft");
-	private static Logger chatLog = Logger.getLogger("FPChat");
+	private static Logger log = Logger.getLogger("FPChat");
 	private MainConfig config;
 	private MySQLConnection sql;
 	private static FPChat plugin;
@@ -85,10 +83,7 @@ public class FPChat extends JavaPlugin {
 		ChatChannel.loadChannels();
 		ChatChannel.setShout(new ShoutChannel(this));
 		ChatChannel.setDefault(config.getDefaultChannel());
-		BadgeList.setupBadges();
-		for(int i : BadgeList.badgelist.keySet()) {
-			BadgeList.badgelist.put(i, BadgeList.badgelist.get(i).replace("&", "§"));
-		}
+		Badge.loadBadges();
 		cache = new PlayerCache(this);
 		ChatFilter.loadFilter();
 		for(Player bp : Bukkit.getOnlinePlayers()){
@@ -96,7 +91,7 @@ public class FPChat extends JavaPlugin {
 		}
 		log(Level.INFO, desc.getName() + " version " + desc.getVersion() + " enabled.");
 	}
-
+	
 	public void onDisable() {
 		for(FPlayer p : FPlayer.getPlayers()) {
 			p.cleanup();
@@ -122,7 +117,6 @@ public class FPChat extends JavaPlugin {
 		for(FPlayer p : FPlayer.getPlayers()) {
 			p.cleanup();
 		}
-		BadgeList.purge();
 		FPlayer.purge();
 		config = new MainConfig(this);
 		if(config.mySQLEnabled()) {
@@ -133,10 +127,7 @@ public class FPChat extends JavaPlugin {
 		ChatChannel.loadChannels();
 		ChatChannel.setShout(new ShoutChannel(this));
 		ChatChannel.setDefault(config.getDefaultChannel());
-		BadgeList.setupBadges();
-		for(int i : BadgeList.badgelist.keySet()) {
-			BadgeList.badgelist.put(i, BadgeList.badgelist.get(i).replace("&", "§"));
-		}
+		Badge.loadBadges();
 		cache = new PlayerCache(this);
 		ChatFilter.loadFilter();
 		for(Player bp : Bukkit.getOnlinePlayers()){
@@ -198,12 +189,12 @@ public class FPChat extends JavaPlugin {
 	}
 
 	public void log(Level level, String msg) {
-		log.log(level, "[FPChatX] " + msg.replaceAll("§[0-9A-FK-OR]", ""));
+		log.log(level, "[FPChat] " + msg.replaceAll("§[0-9A-FK-OR]", ""));
 	}
 
 
 	public void logChat(String msg) {
-		chatLog.info(msg.replaceAll("§[0-9A-FK-OR]", ""));
+		log.info(msg.replaceAll("§[0-9A-FK-OR]", ""));
 	}
 
 	public static FPChat getPlugin(){
@@ -211,7 +202,7 @@ public class FPChat extends JavaPlugin {
 	}
 
 	public static String logo() {
-		return "" + ChatColor.DARK_RED + "[" + ChatColor.GREEN + ChatColor.BOLD + "FPChatX" + ChatColor.RESET + ChatColor.DARK_RED + "]" + ChatColor.RESET ;
+		return "" + ChatColor.DARK_RED + "[" + ChatColor.GREEN + ChatColor.BOLD + "FPChat" + ChatColor.RESET + ChatColor.DARK_RED + "]" + ChatColor.RESET ;
 
 	}
 

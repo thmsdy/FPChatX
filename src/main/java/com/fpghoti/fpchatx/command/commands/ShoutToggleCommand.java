@@ -22,7 +22,7 @@ public class ShoutToggleCommand extends Commands {
         labels.add("fpchat shouttoggle");
         labels.add("ch shouttoggle");
         labels.add("shouttoggle");
-        labels.add("frankoffshout");
+        labels.add("foffshout");
     }
 
     @Override

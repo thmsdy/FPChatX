@@ -5,8 +5,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
+import com.fpghoti.fpchatx.badge.Badge;
 import com.fpghoti.fpchatx.badge.BadgeList;
 import com.fpghoti.fpchatx.command.Commands;
+import com.fpghoti.fpchatx.permission.Permission;
 import com.fpghoti.fpchatx.player.FPlayer;
 import com.fpghoti.fpchatx.util.Util;
 
@@ -28,22 +30,55 @@ public class BadgeListCommand extends Commands {
 
 	@Override
 	public void execute(CommandSender sender, String[] args) {
-		if(!(sender instanceof Player)) {
-			FPlayer.errMsg(null, "This command is for players only.");
-			return;
+		FPlayer p = null;
+		if(sender instanceof Player) {
+			p = FPlayer.getPlayer((Player)sender);
 		}
 
 		if(!plugin.getMainConfig().mySQLEnabled()) {
 			FPlayer.errMsg(null, "MySQL is not enabled.");
 			return;
 		}
-		
-		FPlayer p = FPlayer.getPlayer((Player)sender);
-		if(args.length == 0 || !Util.isDigit(args[0])){
-			BadgeList.badgeList(p, 1);
-		}else{
-			BadgeList.badgeList(p,  Integer.parseInt(args[0]));
+
+		int pg = 1;
+		if (args.length > 0) {
+			if(Util.isDigit(args[0])) {
+				pg = Integer.parseInt(args[0]);
+			}else {
+				FPlayer.errMsg(p, syntax);
+			}
 		}
+
+		BadgeList list = p.getSyncedBadgeList();
+
+		int pageCount = (int) Math.ceil((double) list.getListSize() / 8);
+		if (pg > pageCount) {
+			pg = pageCount;
+		}
+
+		FPlayer.plainMsg(p, "");
+
+		FPlayer.plainMsg(p, ChatColor.GREEN + "Equip badges with " + ChatColor.DARK_AQUA + "/equip <slot id> <badge id>" + ChatColor.GREEN + ".");
+		FPlayer.plainMsg(p, ChatColor.GREEN + "Unequip all badges with " + ChatColor.DARK_AQUA + "/badgesclear" + ChatColor.GREEN + ".");
+		FPlayer.plainMsg(p, ChatColor.GOLD + "[" + Integer.toString(pg) + "/" + Integer.toString(pageCount) + "] "  + ChatColor.YELLOW + "Badges:");
+		FPlayer.plainMsg(p, ChatColor.GOLD + "======================");
+		for (int i = 0; i < 8; i++) {
+			int index = (pg - 1) * 8 + i;
+			if (index < list.getListSize()) {
+				Badge badge = list.getIndex(index);
+				int id = badge.getId();
+				String name = badge.getName();
+				String contents = badge.getContents();
+				String perm = badge.getPerm();
+				String msg = ChatColor.DARK_AQUA + "ID: " + ChatColor.AQUA + id + ChatColor.DARK_AQUA + " - " + ChatColor.RESET + contents +
+						ChatColor.RESET + ChatColor.DARK_AQUA + " - " + ChatColor.WHITE + ChatColor.BOLD + name;
+				if(Permission.isAdmin(p)) {
+					msg = msg + " " + ChatColor.YELLOW + perm;
+				}
+				FPlayer.plainMsg(p, msg);
+			}
+		}
+
 	}
 
 }

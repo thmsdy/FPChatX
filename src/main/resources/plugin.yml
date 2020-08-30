@@ -1,9 +1,8 @@
-name: FPChatX
+name: FPChat
 version: ${project.version}
 main: com.fpghoti.fpchatx.FPChat
 description: Chat plugin for 1.12+
 depend: [Vault]
-softdepend: [PlaceholderAPI]
 commands:
   fpc:
     aliases: [fpchat,ch]
@@ -58,7 +57,7 @@ commands:
     description: Grants player a badge.
     usage: /<command> player badge#
   shouttoggle:
-    aliases: [frankoffshout]
+    aliases: [foffshout]
     description: Toggles ability to see shout.
     usage: /<command> player badge#
   tempchat:

@@ -10,7 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
-import com.fpghoti.fpchatx.badge.BadgeList;
+import com.fpghoti.fpchatx.badge.Badge;
 import com.fpghoti.fpchatx.config.ChannelFile;
 import com.fpghoti.fpchatx.customcodes.BubbleCode;
 import com.fpghoti.fpchatx.customcodes.Codify;
@@ -81,12 +81,7 @@ public abstract class ChatChannel {
 				if(configFile.delete()) {
 					FPChat.getPlugin().log(Level.INFO, "Channel file for " + cname + " successfully deleted.");
 				} else {
-					FPChat.getPlugin().log(Level.SEVERE, "======================================================");
-					FPChat.getPlugin().log(Level.SEVERE, "| ------------------ FPCHATX ERROR ----------------- |");
-					FPChat.getPlugin().log(Level.SEVERE, "======================================================");
-					FPChat.getPlugin().log(Level.SEVERE, "| Channel not properly removed. File deletion error. |");
-					FPChat.getPlugin().log(Level.SEVERE, "| ---------- Check the file and try again. --------- |");
-					FPChat.getPlugin().log(Level.SEVERE, "======================================================");
+					FPChat.getPlugin().log(Level.SEVERE, "Channel not properly removed. File deletion error.");
 					return;
 				}
 			}else {
@@ -316,9 +311,9 @@ public abstract class ChatChannel {
 		}
 		if(plugin.getMainConfig().mySQLEnabled()){
 			Integer[] badges = p.getBadges();
-			slot1 = BadgeList.badgelist.get(badges[0]);
-			slot2 = BadgeList.badgelist.get(badges[1]);
-			slot3 = BadgeList.badgelist.get(badges[2]);
+			slot1 = Badge.getList().get(badges[0]).getContents();
+			slot2 = Badge.getList().get(badges[1]).getContents();
+			slot3 = Badge.getList().get(badges[2]).getContents();
 		}
 		String filler = "";
 		if(plugin.getMainConfig().chatFilterEnabled()){
