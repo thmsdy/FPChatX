@@ -58,6 +58,7 @@ public class FPChat extends JavaPlugin {
 	private MainConfig config;
 	private MySQLConnection sql;
 	private static FPChat plugin;
+	private String pluginTag;
 	private int mysqlTimer = 1140;
 	private BukkitTask refresh = null;
 	private PlayerListener listener = null;
@@ -70,6 +71,7 @@ public class FPChat extends JavaPlugin {
 		vault.setupEconomy();
 		vault.setupPermissions();
 		config = new MainConfig(this);
+		pluginTag = config.getPluginTag();
 		if(config.mySQLEnabled()) {
 			sql = new MySQLConnection(this);
 			sql.generate();
@@ -91,7 +93,7 @@ public class FPChat extends JavaPlugin {
 		}
 		log(Level.INFO, desc.getName() + " version " + desc.getVersion() + " enabled.");
 	}
-	
+
 	public void onDisable() {
 		for(FPlayer p : FPlayer.getPlayers()) {
 			p.cleanup();
@@ -113,12 +115,13 @@ public class FPChat extends JavaPlugin {
 		if(config.mySQLEnabled()) {
 			sql.disconnect();
 		}
-		
+
 		for(FPlayer p : FPlayer.getPlayers()) {
 			p.cleanup();
 		}
 		FPlayer.purge();
 		config = new MainConfig(this);
+		pluginTag = config.getPluginTag();
 		if(config.mySQLEnabled()) {
 			sql = new MySQLConnection(this);
 			sql.generate();
@@ -137,7 +140,7 @@ public class FPChat extends JavaPlugin {
 			listener.enable();
 		}
 		Commands.allowCommands();
-		log(Level.INFO, "FPChatX reloaded.");
+		log(Level.INFO, "FPChat reloaded.");
 	}
 
 	private void registerEvents() {
@@ -200,10 +203,17 @@ public class FPChat extends JavaPlugin {
 	public static FPChat getPlugin(){
 		return plugin;
 	}
+	
+	public String getPluginTag() {
+		return pluginTag;
+	}
 
 	public static String logo() {
-		return "" + ChatColor.DARK_RED + "[" + ChatColor.GREEN + ChatColor.BOLD + "FPChat" + ChatColor.RESET + ChatColor.DARK_RED + "]" + ChatColor.RESET ;
-
+		String pluginTag = FPChat.getPlugin().getPluginTag();
+		if(pluginTag == null) {
+			return "" + ChatColor.DARK_RED + "[" + ChatColor.GREEN + ChatColor.BOLD + "FPChat" + ChatColor.RESET + ChatColor.DARK_RED + "]" + ChatColor.RESET ;
+		}
+		return "" + ChatColor.DARK_RED + "[" + pluginTag + ChatColor.RESET + ChatColor.DARK_RED + "]" + ChatColor.RESET ;
 	}
 
 	@Override

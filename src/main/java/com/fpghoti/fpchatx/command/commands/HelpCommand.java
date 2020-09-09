@@ -72,7 +72,7 @@ public class HelpCommand extends Commands {
 		ctype = ChatColor.DARK_AQUA + "Channel Type: " + ChatColor.GREEN + ctype;
 		String online = ChatColor.DARK_AQUA + "Members Online: " + ChatColor.GREEN + ccount;
 		if(args.length == 0) {
-			FPlayer.plainMsg(p, ChatColor.GOLD + "[INFO] "  + ChatColor.YELLOW + "FPChat:");
+			FPlayer.plainMsg(p, ChatColor.GOLD + "[INFO] "  + plugin.getPluginTag() + ChatColor.YELLOW + ":");
 			FPlayer.plainMsg(p,name);
 			FPlayer.plainMsg(p,primary);
 			FPlayer.plainMsg(p,ctype);

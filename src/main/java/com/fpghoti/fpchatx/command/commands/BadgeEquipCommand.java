@@ -43,7 +43,7 @@ public class BadgeEquipCommand extends Commands {
 
 			Integer slot = Integer.parseInt(args[0]), badgeId = Integer.parseInt(args[1]);
 			if(p.canUseSlot(slot)){
-				if(Badge.getList().containsId(badgeId) && Badge.getList().get(badgeId).isEnabled() && p.hasBadge(badgeId)){
+				if(badgeId == 0 || (Badge.getList().containsId(badgeId) && Badge.getList().get(badgeId).isEnabled() && p.hasBadge(badgeId))){
 					p.setBadge(slot, badgeId);
 					p.updateBadges(slot, badgeId);
 					p.sendMessage( FPChat.logo() + ChatColor.YELLOW + " You have equipped a badge!");

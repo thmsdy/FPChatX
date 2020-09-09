@@ -39,8 +39,11 @@ public class BadgeClearCommand extends Commands {
 		
 		FPlayer p = FPlayer.getPlayer((Player)sender);
 		p.setBadge(1, 0);
+		p.updateBadges(1, 0);
 		p.setBadge(2, 0);
+		p.updateBadges(2, 0);
 		p.setBadge(3, 0);
+		p.updateBadges(3, 0);
 		p.sendMessage(FPChat.logo() + ChatColor.YELLOW + " Unequipped all badges!");
 	}
 

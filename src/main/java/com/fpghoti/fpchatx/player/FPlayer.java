@@ -237,7 +237,7 @@ public class FPlayer {
 	}
 
 	public void setBadge(int slot, int badgeId){
-		if(!Badge.getList().get(badgeId).isEnabled()) {
+		if(!Badge.getList().get(badgeId).isEnabled() && badgeId != 0) {
 			return;
 		}
 		if(slot > 3){
@@ -250,7 +250,7 @@ public class FPlayer {
 			createPlayer();
 		}
 		FPChat.getPlugin().getMySQLConnection().set("badge_slot" + String.valueOf(slot), badgeId, "player_uuid", "=", uuid.toString(),  FPChat.getPlugin().getMainConfig().getChatFeatureTable());
-		getBadges();
+		getSQLBadges();
 	}
 
 	public void createPlayer(){

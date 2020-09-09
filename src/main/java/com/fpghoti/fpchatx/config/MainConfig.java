@@ -116,7 +116,11 @@ public class MainConfig {
 		if (config.get("DefaultChannel")==null){
 			config.createSection("DefaultChannel");
 			config.set("DefaultChannel", "Default");
-		}	
+		}
+		if (config.get("PluginTag")==null){
+			config.createSection("PluginTag");
+			config.set("PluginTag", "&a&lFPChat&r");
+		}
 		try {
 			config.save(configFile);
 		} catch (IOException e) {
@@ -253,6 +257,10 @@ public class MainConfig {
 
 	public String getDistinguishedShout() {
 		return config.getString("DistinguishedShout");
+	}
+	
+	public String getPluginTag() {
+		return  ChatColor.translateAlternateColorCodes('&',config.getString("PluginTag"));
 	}
 
 }

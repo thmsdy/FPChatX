@@ -2,6 +2,7 @@ package com.fpghoti.fpchatx.badge;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.config.BadgeConfig;
+import com.fpghoti.fpchatx.player.FPlayer;
 
 public class Badge {
 	
@@ -60,7 +61,7 @@ public class Badge {
 	public String getPerm() {
 		return "fpchat.badge." + perm;
 	}
-	
+
 	public String getRawPerm() {
 		return perm;
 	}
