@@ -108,7 +108,7 @@ public class BadgeList implements Iterable<Badge>{
 				return b;
 			}
 		}
-		return Badge.getZero();
+		return null;
 	}
 	
 	public Badge getIndex(int index) {

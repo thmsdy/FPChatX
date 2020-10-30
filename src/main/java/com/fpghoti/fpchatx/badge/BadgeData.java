@@ -73,7 +73,7 @@ public class BadgeData {
 		if(!hasSlotPermission(slot)) {
 			return BadgeEquipResult.NO_PERMISSION_SLOT;
 		}
-		if(!player.hasPermission(badge.getPerm())) {
+		if(!player.hasPermission(badge.getPerm()) && !badges.containsId(badge.getId())) {
 			return BadgeEquipResult.NO_PERMISSION_BADGE;
 		}
 		return setBadge(slot, badge);
@@ -87,7 +87,7 @@ public class BadgeData {
 		for(int slot = 1; slot <= FPChat.getPlugin().getMainConfig().getMaxBadgeSlots(); slot++) {
 			if(hasSlotPermission(slot)) {
 				Badge badge = slots.get(slot);
-				if(badge != null && badge.isEnabled() && player.hasPermission(badge.getPerm())) {
+				if(badge != null && badge.isEnabled() && (player.hasPermission(badge.getPerm()) || badges.containsId(badge.getId()))) {
 					appearance = badge.getContents() + appearance;
 				}
 			}
@@ -95,7 +95,7 @@ public class BadgeData {
 		return appearance;
 	}
 
-	public String toString() {
+	public String toString() { //
 		int max = FPChat.getPlugin().getMainConfig().getMaxBadgeSlots();
 		String val = "";
 		boolean first = true;
@@ -117,19 +117,21 @@ public class BadgeData {
 
 	private void setLoadoutFromString(String str) {
 		String[] array = str.split(",");
-		HashMap<Integer, Badge> loadout = new HashMap<Integer, Badge>();
+		slots = new HashMap<Integer, Badge>();
 		for(int i = 0; i < array.length; i++) {
 			int slot = i + 1;
 			String item = array[i];
 			if(Util.isDigit(item)) {
 				int id = Integer.parseInt(item);
-				if(Badge.getList().containsId(id)) {
-					loadout.put(slot, Badge.getList().get(id));
+				Badge badge = Badge.getList().get(id);
+				if(badge != null) {
+					slots.put(slot, badge);
 				}else {
-					loadout.put(slot, Badge.getZero());
+					System.out.println("BADGE " + id + " NULL!"); //TODO <---------------------------
+					slots.put(slot, Badge.getZero());
 				}
 			}else {
-				loadout.put(slot, Badge.getZero());
+				slots.put(slot, Badge.getZero());
 			}
 		}
 	}
@@ -162,7 +164,7 @@ public class BadgeData {
 	public void savePlayerData() {
 		saveNewBadgesToSQL();
 		setBadgeListSQLString(badges.toString());
-		setLoadoutSQLString(toString());
+		setLoadoutSQLString(toString()); //TODO Fix ToString always returning 0,0,0
 	}
 
 	private void saveNewBadgesToSQL() {
