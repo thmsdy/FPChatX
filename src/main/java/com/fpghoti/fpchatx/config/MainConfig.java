@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.fpghoti.fpchatx.FPChat;
+import com.fpghoti.fpchatx.util.Util;
 
 public class MainConfig {
 
@@ -120,6 +121,10 @@ public class MainConfig {
 		if (config.get("PluginTag")==null){
 			config.createSection("PluginTag");
 			config.set("PluginTag", "&a&lFPChat&r");
+		}
+		if (config.get("MaxBadgeSlots")==null){
+			config.createSection("MaxBadgeSlots");
+			config.set("MaxBadgeSlots", "3");
 		}
 		try {
 			config.save(configFile);
@@ -261,6 +266,14 @@ public class MainConfig {
 	
 	public String getPluginTag() {
 		return  ChatColor.translateAlternateColorCodes('&',config.getString("PluginTag"));
+	}
+	
+	public int getMaxBadgeSlots() {
+		String val = config.getString("MaxBadgeSlots");
+		if(Util.isDigit(val)) {
+			return Integer.parseInt(val);
+		}
+		return 0;
 	}
 
 }

@@ -3,11 +3,27 @@ package com.fpghoti.fpchatx.badge;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.fpghoti.fpchatx.util.Util;
+
 
 public class BadgeList implements Iterable<Badge>{
 	
+	public static BadgeList fromString(String str) {
+		String[] array = str.split(",");
+		BadgeList badgeList = new BadgeList();
+		for(String item : array) {
+			if(Util.isDigit(item)) {
+				int id = Integer.parseInt(item);
+				if(Badge.getList().containsId(id) && !badgeList.containsId(id)) {
+					Badge badge = Badge.getList().get(id);
+					badgeList.add(badge);
+				}
+			}
+		}
+		return badgeList;
+	}
+	
 	private ArrayList<Badge> list = new ArrayList<Badge>();
-	private Badge empty = new Badge(0, "Empty", "", "", false);
 	
 	@Override
 	public Iterator<Badge> iterator() {
@@ -22,6 +38,13 @@ public class BadgeList implements Iterable<Badge>{
 			remove(badge.getId());
 		}
 		list.add(badge);
+	}
+	
+	public void add(int id) {
+		Badge badge = Badge.getList().get(id);
+		if(badge != null) {
+			add(badge);
+		}
 	}
 	
 	public void remove(int id) {
@@ -46,20 +69,46 @@ public class BadgeList implements Iterable<Badge>{
 		return false;
 	}
 	
+	public int getLargestId() {
+		int largest = 0;
+		for(Badge b : list) {
+			if(b.getId() > largest) {
+				largest = b.getId();
+			}
+		}
+		return largest;
+	}
+	
+	public String toString() {
+		boolean first = true;
+		String val = "";
+		for(int id = 1; id <= getLargestId(); id++) {
+			if(containsId(id)) {
+				if(first) {
+					first = false;
+					val = Integer.toString(id);
+				}else {
+					val = val + "," + Integer.toString(id);
+				}
+			}
+		}
+		return val;
+	}
+	
 	public boolean overwrites(Badge badge) {
 		return containsId(badge.getId());
 	}
 	
 	public Badge get(int id) {
 		if(id <= 0 || !containsId(id)) {
-			return empty;
+			return Badge.getZero();
 		}
 		for(Badge b : list) {
 			if(b.getId() == id) {
 				return b;
 			}
 		}
-		return empty;
+		return Badge.getZero();
 	}
 	
 	public Badge getIndex(int index) {

@@ -2,7 +2,6 @@ package com.fpghoti.fpchatx.player;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
@@ -16,9 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.fpghoti.fpchatx.FPChat;
-import com.fpghoti.fpchatx.badge.Badge;
-import com.fpghoti.fpchatx.badge.BadgeList;
-import com.fpghoti.fpchatx.badge.Sync;
+import com.fpghoti.fpchatx.badge.BadgeData;
 import com.fpghoti.fpchatx.chat.ChatChannel;
 import com.fpghoti.fpchatx.chat.ChatFilter;
 import com.fpghoti.fpchatx.chat.PrepareChat;
@@ -118,22 +115,19 @@ public class FPlayer {
 	private String primaryChannel;
 	private String primaryTempChannel;
 	private int shoutCooldown;
-	private Integer[] badges;
 	private UUID lastMsg;
 	private boolean spy;
 	private boolean shoutVisible;
 	private boolean hushed;
-	private ArrayList<Integer> synced;
 	private boolean toShout;
 	private boolean toTalk;
 	private ChatChannel talkChannel;
-	private ArrayList<Integer> giveBadgeQueue;
+	private BadgeData badgeData;
 
 	private FPlayer(OfflinePlayer p) {
 		this.toShout = false;
 		this.toTalk = false;
 		this.talkChannel = null;
-		this.synced = new ArrayList<Integer>();
 		this.offlinePlayer = p;
 		this.name = p.getName();
 		this.uuid = p.getUniqueId();
@@ -144,7 +138,6 @@ public class FPlayer {
 		this.spy = pfile.isSpy();
 		this.shoutVisible = pfile.shoutVisible();
 		this.hushed = pfile.isHushed();
-		this.giveBadgeQueue = new ArrayList<Integer>();
 		String rawignore = pfile.getIgnore();
 		if(!rawignore.equals("")) {
 			for(String s : rawignore.split(",")) {
@@ -173,12 +166,7 @@ public class FPlayer {
 			}
 		}
 		if(FPChat.getPlugin().getMainConfig().mySQLEnabled()) {
-			Util.connect();
-			Sync.update(this);
-			this.badges = getSQLBadges();
-		}else {
-			Integer[] empt = {0,0,0};
-			this.badges = empt;
+			this.badgeData = new BadgeData(this);
 		}
 	}
 
@@ -189,128 +177,7 @@ public class FPlayer {
 	public String getName() {
 		return this.name;
 	}
-
-	public void updateBadges(int slot, int id) {
-		if(!Badge.getList().get(id).isEnabled()) {
-			badges[slot-1] = 0;
-			return;
-		}
-		badges[slot-1] = id;
-	}
-
-	public void clearUnownedBadges() {
-		if(!hasBadge(badges[0]) || !Badge.getList().get(badges[0]).isEnabled()) {
-			setBadge(1, 0);
-			updateBadges(1,0);
-		}
-		if(!hasBadge(badges[1])|| !Badge.getList().get(badges[1]).isEnabled()) {
-			setBadge(2, 0);
-			updateBadges(2,0);
-		}
-		if(!hasBadge(badges[2])|| !Badge.getList().get(badges[2]).isEnabled()) {
-			setBadge(3, 0);
-			updateBadges(3,0);
-		}
-	}
-
-	public Integer[] getSQLBadges(){
-		UUID id = uuid;
-		String uuid = id.toString();
-		Integer badge1 = 0, badge2 = 0, badge3 = 0;
-		Util.connect();
-		if(!FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid, FPChat.getPlugin().getMainConfig().getChatFeatureTable())){
-			createPlayer();
-		}
-		badge1 = (Integer) FPChat.getPlugin().getMySQLConnection().get("badge_slot1", "player_uuid", "=", uuid, FPChat.getPlugin().getMainConfig().getChatFeatureTable());
-		badge2 = (Integer)FPChat.getPlugin().getMySQLConnection().get("badge_slot2", "player_uuid", "=", uuid, FPChat.getPlugin().getMainConfig().getChatFeatureTable());
-		badge3 = (Integer)FPChat.getPlugin().getMySQLConnection().get("badge_slot3", "player_uuid", "=", uuid, FPChat.getPlugin().getMainConfig().getChatFeatureTable());
-		Integer[] badges = {badge1, badge2, badge3};
-		return badges;
-	}
-
-	public Boolean hasBadge(int id){
-		if(id == 0) {
-			return true;
-		}
-
-		return hasPermission("fpchat.badge." + Badge.getList().get(id).getPerm()) || isSynced(id);
-	}
-
-	public void setBadge(int slot, int badgeId){
-		if(!Badge.getList().get(badgeId).isEnabled() && badgeId != 0) {
-			return;
-		}
-		if(slot > 3){
-			slot = 3;
-		}else if(slot < 1){
-			slot = 1;
-		}
-		Util.connect();
-		if(!FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid.toString(), FPChat.getPlugin().getMainConfig().getChatFeatureTable())){
-			createPlayer();
-		}
-		FPChat.getPlugin().getMySQLConnection().set("badge_slot" + String.valueOf(slot), badgeId, "player_uuid", "=", uuid.toString(),  FPChat.getPlugin().getMainConfig().getChatFeatureTable());
-		getSQLBadges();
-	}
-
-	public void createPlayer(){
-		Util.connect();
-		if(!FPChat.getPlugin().getMySQLConnection().itemExists("player_uuid", uuid.toString(), FPChat.getPlugin().getMainConfig().getChatFeatureTable())){
-			FPChat.getPlugin().getMySQLConnection().insertInto("player_uuid, badge_slot1, badge_slot2, badge_slot3", " '" + uuid + "', '0', '0', '0' ",  FPChat.getPlugin().getMainConfig().getChatFeatureTable());
-		}
-	}
-
-	public Boolean canUseSlot(int slotid){
-		if(slotid == 1){
-			return hasPermission("fpchat.slot1") || hasSlotBadge(1);
-		}else if(slotid == 2){
-			return hasPermission("fpchat.slot2") || hasSlotBadge(2);
-		}else if(slotid == 3){
-			return hasPermission("fpchat.slot3") || hasSlotBadge(3);
-		}
-		return false;
-	}
-
-	private boolean hasSlotBadge(int slot) {
-		for(Badge b : Badge.getList().getSlotUnlockBadges(slot)) {
-			if(hasBadge(b.getId())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public void addSyncedBadge(Integer id) {
-		if(!synced.contains(id)) {
-			this.synced.add(id);
-		}
-	}
-
-	public void removeSyncedBadge(Integer id) {
-		this.synced.remove(id);
-	}
-
-	public boolean isSynced(Integer id) {
-		return this.synced.contains(id);
-	}
-
-	public ArrayList<Integer> syncedList(){
-		return this.synced;
-	}
-
-	public BadgeList getSyncedBadgeList() {
-		BadgeList list = new BadgeList();
-		ArrayList<Integer> sc = new ArrayList<Integer>(synced);
-		Collections.sort(sc);
-		for(Integer i : sc) {
-			Badge badge = Badge.getList().get(i);
-			if(badge.isEnabled()) {
-				list.add(badge);
-			}
-		}
-		return list;
-	}
-
+	
 	public int getShoutCooldown() {
 		return this.shoutCooldown;
 	}
@@ -358,6 +225,10 @@ public class FPlayer {
 	public void hideShout() {
 		this.shoutVisible = false;
 	}
+	
+	public BadgeData getBadgeData() {
+		return this.badgeData;
+	}
 
 	public boolean setPrefix(String prefix) {
 		if(isOnline() && getPlayer() != null) {
@@ -386,13 +257,6 @@ public class FPlayer {
 
 	public void unhush() {
 		this.hushed = false;
-	}
-
-	public Integer[] getBadges() {
-		if(badges[0] == null || badges[1] == null || badges[2] == null) {
-			badges = getSQLBadges();
-		}
-		return this.badges;
 	}
 
 	public FPlayer getLastMessage() {
@@ -739,23 +603,6 @@ public class FPlayer {
 		}
 		sendMessage(FPChat.logo() + ChatColor.RED + "The person you are trying to send a message to is either offline or ignoring you.");
 		return false;
-	}
-
-	public void queueBadgeAdd(int id) {
-		if(!Badge.getList().get(id).isEnabled()) {
-			return;
-		}
-		if(!hasBadge( id) && !giveBadgeQueue.contains(id)) {
-			giveBadgeQueue.add(id);
-		}
-	}
-
-	public void unqueueBadge(Integer id) {
-		giveBadgeQueue.remove(id);
-	}
-
-	public ArrayList<Integer> getBadgeQueue(){
-		return this.giveBadgeQueue;
 	}
 
 	public void cleanup() {

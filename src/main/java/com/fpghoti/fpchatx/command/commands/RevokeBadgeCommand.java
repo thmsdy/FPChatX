@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.badge.Badge;
-import com.fpghoti.fpchatx.badge.Sync;
 import com.fpghoti.fpchatx.command.Commands;
 import com.fpghoti.fpchatx.permission.Permission;
 import com.fpghoti.fpchatx.player.FPlayer;
@@ -49,18 +48,19 @@ public class RevokeBadgeCommand extends Commands {
 			OfflinePlayer o = Bukkit.getOfflinePlayer(u);
 			if(o != null) {
 				FPlayer toRevoke = FPlayer.getPlayer(o,true);
-				if(Sync.syncExists(toRevoke) && (Util.isDigit(args[1]) || args[1].equals("*") )){
+				if(Util.isDigit(args[1]) || args[1].equals("*")){
 
 					if(args[1].equals("*")) {
-						Sync.revoke(toRevoke);
+						toRevoke.getBadgeData().clearBadgeList();
 						FPlayer.goodMsg(p, "All badges revoked from the specified player.");
 					}else {
 
 						if(Badge.getList().containsId(Integer.parseInt(args[1]))) {
 							int id = Integer.parseInt(args[1]);
-							Sync.revoke(toRevoke, id);
-							toRevoke.removeSyncedBadge(id);
-							toRevoke.clearUnownedBadges();
+							
+							toRevoke.getBadgeData().getBadgeList().remove(id);
+							toRevoke.getBadgeData().savePlayerData();
+
 							FPlayer.goodMsg(p, "Badge revoked from the specified player.");
 						}else {
 							FPlayer.errMsg(p, "Invalid badge.");

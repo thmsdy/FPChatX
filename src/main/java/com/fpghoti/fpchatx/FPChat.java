@@ -59,7 +59,6 @@ public class FPChat extends JavaPlugin {
 	private MySQLConnection sql;
 	private static FPChat plugin;
 	private String pluginTag;
-	private int mysqlTimer = 1140;
 	private BukkitTask refresh = null;
 	private PlayerListener listener = null;
 	private PlayerCache cache;
@@ -233,14 +232,6 @@ public class FPChat extends JavaPlugin {
 								p.setShoutCooldown(time - 1);
 							}
 						}
-					}
-				}
-				if(config.mySQLEnabled()){     // mysql auto reconnect
-					if(mysqlTimer >= 1200){
-						sql.reconnect();
-						mysqlTimer = 0;
-					}else{
-						mysqlTimer++;
 					}
 				}
 			}

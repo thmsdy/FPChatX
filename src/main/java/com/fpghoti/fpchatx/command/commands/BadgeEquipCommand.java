@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.badge.Badge;
+import com.fpghoti.fpchatx.badge.BadgeEquipResult;
 import com.fpghoti.fpchatx.command.Commands;
 import com.fpghoti.fpchatx.player.FPlayer;
 import com.fpghoti.fpchatx.util.Util;
@@ -42,16 +43,24 @@ public class BadgeEquipCommand extends Commands {
 		if(Util.isDigit(args[0]) && Util.isDigit(args[1])){
 
 			Integer slot = Integer.parseInt(args[0]), badgeId = Integer.parseInt(args[1]);
-			if(p.canUseSlot(slot)){
-				if(badgeId == 0 || (Badge.getList().containsId(badgeId) && Badge.getList().get(badgeId).isEnabled() && p.hasBadge(badgeId))){
-					p.setBadge(slot, badgeId);
-					p.updateBadges(slot, badgeId);
-					p.sendMessage( FPChat.logo() + ChatColor.YELLOW + " You have equipped a badge!");
-				}else{
-					p.sendMessage(FPChat.logo() + ChatColor.YELLOW + " You do not have permission to equip this badge!");
-				}
-			}else{
-				p.sendMessage(FPChat.logo() + ChatColor.YELLOW + " You do not have permission to equip a badge in this slot!");
+			
+			if(!Badge.getList().containsId(badgeId)) {
+				p.sendMessage(FPChat.logo() + ChatColor.RED + " Invalid badge!");
+				return;
+			}
+			
+			Badge badge = Badge.getList().get(badgeId);
+			BadgeEquipResult result = p.getBadgeData().equipBadge(slot, badge);
+			
+			switch(result) {
+				
+				case SUCCESS:
+					p.sendMessage(FPChat.logo() + ChatColor.YELLOW + " You successfully equiped a badge!");
+					break;
+					
+				default:
+					p.sendMessage(FPChat.logo() + ChatColor.RED + " Could not equip badge: " + result.toString());
+			
 			}
 		}
 	}

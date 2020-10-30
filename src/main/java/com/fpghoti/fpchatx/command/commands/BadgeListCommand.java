@@ -49,7 +49,7 @@ public class BadgeListCommand extends Commands {
 			}
 		}
 
-		BadgeList list = p.getSyncedBadgeList();
+		BadgeList list = p.getBadgeData().getBadgeList();
 
 		int pageCount = (int) Math.ceil((double) list.getListSize() / 8);
 		if (pg > pageCount) {

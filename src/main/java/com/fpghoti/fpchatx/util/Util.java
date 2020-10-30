@@ -5,15 +5,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import com.fpghoti.fpchatx.FPChat;
-
 public class Util {
-
-	public static void connect(){
-		if(FPChat.getPlugin().getMySQLConnection().getConnection() == null){
-			FPChat.getPlugin().getMySQLConnection().reconnect();
-		}
-	}
 
 	public Player playerGet(String uuid){
 		UUID id = UUID.fromString(uuid);

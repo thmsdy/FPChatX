@@ -2,9 +2,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>FPChat</groupId>
+	<groupId>com.fpghoti</groupId>
 	<artifactId>FPChat</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
@@ -43,13 +43,6 @@
 				<version>3.0.0</version>
 				<configuration>
 					<source>1.7</source>
-					<artifactSet>
-						<includes>
-							<include>org.apache.commons*:*</include>
-						</includes>
-					</artifactSet>
-					<relocations>
-					</relocations>
 				</configuration>
 				<executions>
 					<execution>
@@ -67,17 +60,25 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.16.2-R0.1-SNAPSHOT</version>
+			<version>1.16.3-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.MilkBowl</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>1.7</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>3.4.5</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>

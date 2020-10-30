@@ -10,7 +10,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
-import com.fpghoti.fpchatx.badge.Badge;
 import com.fpghoti.fpchatx.config.ChannelFile;
 import com.fpghoti.fpchatx.customcodes.BubbleCode;
 import com.fpghoti.fpchatx.customcodes.Codify;
@@ -297,35 +296,24 @@ public abstract class ChatChannel {
 	}
 
 	public String format(FPlayer p, String msg) {
-		String finalMessage = "";
-		String slot3 = "", slot2 = "", slot1 = "";
-		String stf = "";
-		if (Permission.canUseColor(p)) {
-			msg = msg.replaceAll("&([0-9a-fk-or])", "§$1");
-		} else {
-			msg = msg.replaceAll("§[0-9a-fk-or]", "");
-		}
+		String finalMessage = "", badges = "", stf = "", filler = "";
 		String header = PrepareChat.swapPlaceholders(p, this, msg);
 		if(Permission.isStaff(p)){
 			stf = FPChat.getPlugin().getMainConfig().getStaffBadge();
 		}
 		if(plugin.getMainConfig().mySQLEnabled()){
-			Integer[] badges = p.getBadges();
-			slot1 = Badge.getList().get(badges[0]).getContents();
-			slot2 = Badge.getList().get(badges[1]).getContents();
-			slot3 = Badge.getList().get(badges[2]).getContents();
+			badges = p.getBadgeData().getAppearanceString();
 		}
-		String filler = "";
 		if(plugin.getMainConfig().chatFilterEnabled()){
 			filler = "word ";
 		}
 		if(Permission.canUseColor(p)){
 			String last = ChatFilter.filter(filler + msg);
 			last = BubbleCode.bubblecode(Permission.canBubbleCode(p), Codify.changeFormatSign(last));
-			finalMessage = stf + slot3 + slot2 + slot1 + header + last;
+			finalMessage = ChatColor.translateAlternateColorCodes('&', stf + badges + header + last);
 		}else{
 			String newmsg = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('§', ChatFilter.filter(filler + msg)));
-			finalMessage = stf + slot3 + slot2 + slot1 + Codify.removeBubbles(header + newmsg);
+			finalMessage = stf + badges + Codify.removeBubbles(header + newmsg);
 		}
 		return finalMessage;
 	}

@@ -2,12 +2,12 @@ package com.fpghoti.fpchatx.badge;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.config.BadgeConfig;
-import com.fpghoti.fpchatx.player.FPlayer;
 
 public class Badge {
 	
 	private static BadgeList badges;
 	private static BadgeConfig bconfig = null;
+	private static Badge zero = new Badge(0, "Empty", "", "", false);
 	
 	public static void loadBadges() {
 		 badges = new BadgeList();
@@ -20,6 +20,10 @@ public class Badge {
 			bconfig = new BadgeConfig(FPChat.getPlugin());
 		}
 		return bconfig;
+	}
+	
+	public static Badge getZero() {
+		return zero;
 	}
 
 	public static BadgeList getList() {

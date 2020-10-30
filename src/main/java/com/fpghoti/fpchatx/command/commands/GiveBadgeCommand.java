@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.badge.Badge;
-import com.fpghoti.fpchatx.badge.Sync;
 import com.fpghoti.fpchatx.command.Commands;
 import com.fpghoti.fpchatx.permission.Permission;
 import com.fpghoti.fpchatx.player.FPlayer;
@@ -47,9 +46,10 @@ public class GiveBadgeCommand extends Commands {
 			}
 			if(Util.isDigit(args[1]) && Badge.getList().containsId(Integer.parseInt(args[1]))) {
 				int id = Integer.parseInt(args[1]);
-				toGive.queueBadgeAdd(id);
-				Sync.update(toGive);
-				toGive.addSyncedBadge(id);
+
+				toGive.getBadgeData().getBadgeList().add(id);
+				toGive.getBadgeData().savePlayerData();
+
 				FPlayer.goodMsg(p, "Badge granted.");
 			}else {
 				 FPlayer.errMsg(p,"Wrong command usage.");

@@ -1,16 +1,15 @@
 package com.fpghoti.fpchatx.mysql;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
-
-import org.bukkit.scheduler.BukkitRunnable;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.config.MainConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 
 public class MySQLConnection{
@@ -18,6 +17,7 @@ public class MySQLConnection{
 	private FPChat plugin;
 	private String host, user, password, database, port;
 	private MainConfig config;
+	private HikariDataSource hikari;
 
 	public MySQLConnection(FPChat plugin) {
 		this.plugin = plugin;
@@ -27,27 +27,38 @@ public class MySQLConnection{
 		password = config.getPassword();
 		database = config.getDatabase();
 		port = config.getPort();
-	}
-
-	private Connection connection;
-
-	public Connection getConnection(){
-		return connection;
+		hikari = new HikariDataSource();
+		hikari.setMaximumPoolSize(10);
+		hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+		hikari.addDataSourceProperty("serverName", host);
+		hikari.addDataSourceProperty("user", user);
+		hikari.addDataSourceProperty("password", password);
+		hikari.addDataSourceProperty("databaseName", database);
+		hikari.addDataSourceProperty("port", port);
 	}
 
 	public void generate() {
 		if(config.mySQLEnabled()){
 			plugin.log(Level.INFO, "Connecting to MySQL...");
-			connect();
-			if(!tableExists(config.getChatFeatureTable())){
-				plugin.log(Level.INFO, "FPChat table not found. Creating new table...");
-				//createTable(config.getChatFeatureTable(), "player_uuid VARCHAR (36), badge_slot1 INT (11), badge_slot2 INT (11), badge_slot3 INT (11)");
-				update("CREATE TABLE " + config.getChatFeatureTable() + " (player_uuid VARCHAR (36), badge_slot1 INT (11), badge_slot2 INT (11), badge_slot3 INT (11), PRIMARY KEY(player_uuid))");
-				plugin.log(Level.INFO, "FPChat table created!");
-			}
-			if(!tableExists(config.getPermSyncTable())){
-				//createTable(config.getPermSyncTable(), "player_uuid VARCHAR (36), badges TEXT");
-				update("CREATE TABLE " + config.getPermSyncTable() + " (player_uuid VARCHAR (36), badges TEXT, PRIMARY KEY(player_uuid))");
+			Connection connection = null;
+			try {
+				connection = hikari.getConnection();
+				if(!tableExists(config.getChatFeatureTable(), connection)){
+					plugin.log(Level.INFO, "FPChat table not found. Creating new table...");
+					update("CREATE TABLE " + config.getChatFeatureTable() + " (player_uuid VARCHAR (36), badge_loadout TEXT, PRIMARY KEY(player_uuid))");
+					plugin.log(Level.INFO, "FPChat table created!");
+				}
+				if(!tableExists(config.getPermSyncTable(), connection)){
+					update("CREATE TABLE " + config.getPermSyncTable() + " (player_uuid VARCHAR (36), badges TEXT, PRIMARY KEY(player_uuid))");
+				}
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}finally {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 			plugin.log(Level.INFO, "FPChat successfully connected to MySQL!");
 			plugin.log(Level.INFO, "Badges have been enabled!");
@@ -56,66 +67,15 @@ public class MySQLConnection{
 		}
 	}
 
-	public void connect(){
-
-		if (host.equalsIgnoreCase("") || host == null) {
-			plugin.log(Level.SEVERE, "You have not specified a host in the FPChatX config!");
-		} else if (user.equalsIgnoreCase("") || user == null) {
-			plugin.log(Level.SEVERE, "You have not specified a user in the FPChatX config!");
-		} else if (password.equalsIgnoreCase("") || password == null) {
-			plugin.log(Level.SEVERE, "You have not specified a password in the FPChatX config!");
-		} else if (database.equalsIgnoreCase("") || database == null) {
-			plugin.log(Level.SEVERE, "You have not specified a database in the FPChatX config!");
-		} else {
-			login();
-		}
-	}
-
-	public void disconnect(){
-		try{
-			if (getConnection() != null){
-				connection.close();
-			}
-			else{
-				plugin.log(Level.SEVERE, "There was an issue with MySQL: FPChatX is not currently connected to a database.");
-			}
-		}catch(SQLException e){
-			plugin.log(Level.SEVERE, "There was an issue with MySQL: " + e.getMessage());
-			e.printStackTrace();
-		}
-		connection = null;
-	}
-
-	public void reconnect(){
-		disconnect();
-		connect();
-	}
-
-	public void login(){
-		try{
-			if (getConnection() != null){
-				connection.close();
-			}
-		}
-		catch (Exception e){}
-		connection = null;
-		try{
-			connection = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, user, password);
-		}catch(SQLException e){
-			plugin.log(Level.SEVERE, "There was an issue with MySQL: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	public ResultSet query(String query){
+	public ResultSet query(String query, Connection connection){
 		if (query == null) {
 			return null;
 		}
-		connect();
 		ResultSet results = null;
 		try{
-			Statement statement = getConnection().createStatement();
+			Statement statement = connection.createStatement();
 			results = statement.executeQuery(query);
+
 		}catch(SQLException e){
 			plugin.log(Level.SEVERE, "There has been an error:" + e.getMessage());
 			plugin.log(Level.SEVERE,"Failed Query in MySQL using the following query input:");
@@ -129,34 +89,46 @@ public class MySQLConnection{
 		if (input == null){
 			return;
 		}
-		connect();
-		try{
-			Statement statement = getConnection().createStatement();
-			statement.executeUpdate(input);
-			statement.close();
-		}catch(SQLException e){
-			plugin.log(Level.SEVERE, "There has been an error:" + e.getMessage());
-			plugin.log(Level.SEVERE,"Failed to update MySQL using the following update input:");
-			plugin.log(Level.SEVERE, input);
-			e.printStackTrace();
-		}
+			Statement statement;
+			Connection connection = null;
+			try {
+				connection = hikari.getConnection();
+				statement = connection.createStatement();
+				statement.executeUpdate(input);
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}finally {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+	}
+	
+	public void asyncUpdate(String input){
+		CompletableFuture.runAsync(() -> {
+			update(input);
+		});	
 	}
 
-	public boolean tableExists(String tablename){
+	public boolean tableExists(String tablename, Connection connection){
 		if (tablename == null) {
 			return false;
 		}
 		try{
-			if (getConnection() == null) {
+			if (connection == null) {
 				return false;
 			}
-			if (getConnection().getMetaData() == null) {
+			if (connection.getMetaData() == null) {
 				return false;
 			}
-			ResultSet results = getConnection().getMetaData().getTables(null, null, tablename, null);
+			ResultSet results = connection.getMetaData().getTables(null, null, tablename, null);
 			if (results.next()) {
 				return true;
 			}
+
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}
@@ -167,67 +139,53 @@ public class MySQLConnection{
 		if (data != null) {
 			data = "'" + data + "'";
 		}
+		Connection connection = null;
 		try{
-			ResultSet results = query("SELECT * FROM " + table + " WHERE " + column + "=" + data);
+			connection = hikari.getConnection();
+			ResultSet results = query("SELECT * FROM " + table + " WHERE " + column + "=" + data, connection);
 			while (results.next()) {
 				if (results.getString(column) != null) {
 					return true;
 				}
 			}
+
 		}catch(SQLException e) {
 			plugin.log(Level.SEVERE, "MYSQL itemExists error: " + e.getMessage());
 			e.printStackTrace();
+		}finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 
 	public void createTable(String table, String columns){
-		if (!tableExists(table)) {
-			update("CREATE TABLE " + table + " (" + columns + ")");
-		}
-	}
-
-	public void insertInto(final String columns, final String values, final String table){
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				update("INSERT INTO " + table + " (" + columns + ") VALUES (" + values + ")");
-			}
-		}.runTaskAsynchronously(plugin);
-	}
-
-
-	public void set(final String selected, final Object object, final String column, final String equality, final String data, final String table){
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				Object gobject = object;
-				String gdata = data;
-				if (gobject != null) {
-					gobject = "'" + gobject + "'";
-				}
-				if (gdata != null) {
-					gdata = "'" + gdata + "'";
-				}
-				update("UPDATE " + table + " SET " + selected + "=" + gobject + " WHERE " + column + equality + gdata + ";");
-			}
-		}.runTaskAsynchronously(plugin);
-	}
-	
-	
-	public Object get(String selected, String column, String equality, String data, String table){
-		if (data != null) {
-			data = "'" + data + "'";
-		}
-		try{
-			ResultSet rs = query("SELECT * FROM " + table + " WHERE " + column + equality + data);
-			if (rs.next()) {
-				return rs.getObject(selected);
+		Connection connection = null;
+		try {
+			connection = hikari.getConnection();
+			if (!tableExists(table, connection)) {
+				update("CREATE TABLE " + table + " (" + columns + ")");
 			}
 		}catch(SQLException e) {
-			plugin.log(Level.SEVERE, "MySQL get error: " + e.getMessage());
 			e.printStackTrace();
+		}finally {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-		return null;
 	}
+
+	public Connection getConnection() throws SQLException {
+		return hikari.getConnection();
+	}
+
+	public void disconnect() {
+		hikari.close();
+	}
+
 }
