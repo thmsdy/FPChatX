@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.config.ChannelFile;
-import com.fpghoti.fpchatx.customcodes.BubbleCode;
-import com.fpghoti.fpchatx.customcodes.Codify;
 import com.fpghoti.fpchatx.permission.Permission;
 import com.fpghoti.fpchatx.player.FPlayer;
 
@@ -309,11 +307,11 @@ public abstract class ChatChannel {
 		}
 		if(Permission.canUseColor(p)){
 			String last = ChatFilter.filter(filler + msg);
-			last = BubbleCode.bubblecode(Permission.canBubbleCode(p), Codify.changeFormatSign(last));
-			finalMessage = ChatColor.translateAlternateColorCodes('&', stf + badges + header + last);
+			last = BubbleCode.bubblecode(Permission.canBubbleCode(p), ChatColor.translateAlternateColorCodes('&', HexColor.formatHex(last)));
+			finalMessage = HexColor.formatHex(stf + badges + header + last);
 		}else{
 			String newmsg = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('§', ChatFilter.filter(filler + msg)));
-			finalMessage = stf + badges + Codify.removeBubbles(header + newmsg);
+			finalMessage = stf + badges + Codify.removeBubbles(HexColor.formatHex(header) + newmsg);
 		}
 		return finalMessage;
 	}

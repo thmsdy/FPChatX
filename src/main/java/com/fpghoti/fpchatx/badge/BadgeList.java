@@ -112,6 +112,9 @@ public class BadgeList implements Iterable<Badge>{
 	}
 	
 	public Badge getIndex(int index) {
+		if(list.size() <= 0) {
+			return null;
+		}
 		return list.get(index);
 	}
 	

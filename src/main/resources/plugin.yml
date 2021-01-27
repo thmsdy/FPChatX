@@ -3,7 +3,7 @@ version: ${project.version}
 main: com.fpghoti.fpchatx.FPChat
 description: Chat plugin for 1.12+
 depend: [Vault]
-loadbefore: [Essentials]
+loadbefore: [Essentials,ChatManager]
 commands:
   fpc:
     aliases: [fpchat,ch]

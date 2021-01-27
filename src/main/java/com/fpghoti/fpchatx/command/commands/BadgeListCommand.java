@@ -66,16 +66,18 @@ public class BadgeListCommand extends Commands {
 			int index = (pg - 1) * 8 + i;
 			if (index < list.getListSize()) {
 				Badge badge = list.getIndex(index);
-				int id = badge.getId();
-				String name = badge.getName();
-				String contents = badge.getContents();
-				String perm = badge.getPerm();
-				String msg = ChatColor.DARK_AQUA + "ID: " + ChatColor.AQUA + id + ChatColor.DARK_AQUA + " - " + ChatColor.RESET + contents +
-						ChatColor.RESET + ChatColor.DARK_AQUA + " - " + ChatColor.WHITE + ChatColor.BOLD + name;
-				if(Permission.isAdmin(p)) {
-					msg = msg + " " + ChatColor.YELLOW + perm;
+				if(badge != null) {
+					int id = badge.getId();
+					String name = badge.getName();
+					String contents = badge.getContents();
+					String perm = badge.getPerm();
+					String msg = ChatColor.DARK_AQUA + "ID: " + ChatColor.AQUA + id + ChatColor.DARK_AQUA + " - " + ChatColor.RESET + contents +
+							ChatColor.RESET + ChatColor.DARK_AQUA + " - " + ChatColor.WHITE + ChatColor.BOLD + name;
+					if(Permission.isAdmin(p)) {
+						msg = msg + " " + ChatColor.YELLOW + perm;
+					}
+					FPlayer.plainMsg(p, msg);
 				}
-				FPlayer.plainMsg(p, msg);
 			}
 		}
 

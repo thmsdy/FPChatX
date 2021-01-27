@@ -16,14 +16,14 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.badge.BadgeData;
+import com.fpghoti.fpchatx.chat.BubbleCode;
 import com.fpghoti.fpchatx.chat.ChatChannel;
 import com.fpghoti.fpchatx.chat.ChatFilter;
+import com.fpghoti.fpchatx.chat.Codify;
 import com.fpghoti.fpchatx.chat.PrepareChat;
 import com.fpghoti.fpchatx.chat.StandardChannel;
 import com.fpghoti.fpchatx.chat.TempChannel;
 import com.fpghoti.fpchatx.config.PlayerFile;
-import com.fpghoti.fpchatx.customcodes.BubbleCode;
-import com.fpghoti.fpchatx.customcodes.Codify;
 import com.fpghoti.fpchatx.permission.Permission;
 import com.fpghoti.fpchatx.util.Util;
 import com.fpghoti.fpchatx.util.VaultUtil;
@@ -550,7 +550,7 @@ public class FPlayer {
 			}
 			if(Permission.canPMColor(from)){
 				String last = ChatFilter.filter(filler + msg);
-				last = BubbleCode.bubblecode(Permission.canBubbleCode(from), Codify.changeFormatSign(last));
+				last = BubbleCode.bubblecode(Permission.canBubbleCode(from), ChatColor.translateAlternateColorCodes('&', last));
 				finalMessage = stf + header + last;
 			}else{
 				String newmsg = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('§', ChatFilter.filter(filler + msg)));
@@ -584,7 +584,7 @@ public class FPlayer {
 			}
 			if(Permission.canPMColor(this)){
 				String last = ChatFilter.filter(filler + msg);
-				last = BubbleCode.bubblecode(Permission.canBubbleCode(this), Codify.changeFormatSign(last));
+				last = BubbleCode.bubblecode(Permission.canBubbleCode(this), ChatColor.translateAlternateColorCodes('&', last));
 				finalMessage = stf + header + last;
 			}else{
 				String newmsg = ChatColor.stripColor(ChatColor.translateAlternateColorCodes('§', ChatFilter.filter(filler + msg)));

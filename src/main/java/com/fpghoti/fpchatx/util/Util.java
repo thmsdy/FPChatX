@@ -7,7 +7,12 @@ import org.bukkit.entity.Player;
 
 public class Util {
 
-	public Player playerGet(String uuid){
+	public static String getGameVersion() {
+		String version = Bukkit.getVersion().split("MC: ")[1].replace(")", "");
+		return version;
+	}
+	
+	public static Player playerGet(String uuid){
 		UUID id = UUID.fromString(uuid);
 		Player p = Bukkit.getPlayer(id);
 		return p;

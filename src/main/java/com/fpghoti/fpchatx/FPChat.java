@@ -191,7 +191,7 @@ public class FPChat extends JavaPlugin {
 	}
 
 	public void log(Level level, String msg) {
-		log.log(level, "[FPChat] " + msg.replaceAll("§[0-9A-FK-OR]", ""));
+		log.log(level, msg.replaceAll("§[0-9A-FK-OR]", ""));
 	}
 
 

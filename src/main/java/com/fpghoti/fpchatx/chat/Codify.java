@@ -1,35 +1,6 @@
-package com.fpghoti.fpchatx.customcodes;
+package com.fpghoti.fpchatx.chat;
 
 public class Codify {
-
-	public static String changeFormatSign(String str) {
-		String nstr = str;
-		nstr = nstr.replace("&0", "§0");
-		nstr = nstr.replace("&1", "§1");
-		nstr = nstr.replace("&2", "§2");
-		nstr = nstr.replace("&3", "§3");
-		nstr = nstr.replace("&4", "§4");
-		nstr = nstr.replace("&5", "§5");
-		nstr = nstr.replace("&6", "§6");
-		nstr = nstr.replace("&7", "§7");
-		nstr = nstr.replace("&8", "§8");
-		nstr = nstr.replace("&9", "§9");
-		nstr = nstr.replace("&a", "§a");
-		nstr = nstr.replace("&b", "§b");
-		nstr = nstr.replace("&c", "§c");
-		nstr = nstr.replace("&d", "§d");
-		nstr = nstr.replace("&e", "§e");
-		nstr = nstr.replace("&f", "§f");
-		nstr = nstr.replace("&k", "§k");
-		nstr = nstr.replace("&l", "§l");
-		nstr = nstr.replace("&m", "§m");
-		nstr = nstr.replace("&n", "§n");
-		nstr = nstr.replace("&o", "§o");
-		nstr = nstr.replace("&r", "§r");
-		//nstr = nstr.replace("&w", "§w");
-		//nstr = nstr.replace("&x", "§x");
-		return nstr;
-	}
 	
 	public static String removeBubbles(String str) {
 		String nstr = str;

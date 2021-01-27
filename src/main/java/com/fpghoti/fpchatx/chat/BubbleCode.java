@@ -1,4 +1,4 @@
-package com.fpghoti.fpchatx.customcodes;
+package com.fpghoti.fpchatx.chat;
 
 public class BubbleCode {
 

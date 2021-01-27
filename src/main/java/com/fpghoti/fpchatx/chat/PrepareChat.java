@@ -1,12 +1,11 @@
 package com.fpghoti.fpchatx.chat;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
-import com.fpghoti.fpchatx.customcodes.BubbleCode;
-import com.fpghoti.fpchatx.customcodes.Codify;
 import com.fpghoti.fpchatx.permission.Permission;
 import com.fpghoti.fpchatx.player.FPlayer;
 import com.fpghoti.fpchatx.util.VaultUtil;
@@ -20,7 +19,7 @@ public class PrepareChat {
 	public static String swapPlaceholders(FPlayer p, String recipient, String msg, boolean in) {
 		return swapPlaceholders(p,null,msg,recipient,in);
 	}
-	
+
 	public static String swapPlaceholders(FPlayer p, String msg) {
 		return swapPlaceholders(p,null,msg,"",false);
 	}
@@ -38,14 +37,14 @@ public class PrepareChat {
 		String groupSuffix = "";
 		World world = sender.getWorld();
 		prefix = VaultUtil.chat.getPlayerPrefix(sender);
-		prefix = BubbleCode.bubblecode(Permission.canBubbleCode(p), Codify.changeFormatSign(prefix)).replaceAll("&([0-9A-FK-OR])", "§$1").replace("&", "§");
+		prefix = BubbleCode.bubblecode(Permission.canBubbleCode(p), ChatColor.translateAlternateColorCodes('&', prefix));
 		suffix = VaultUtil.chat.getPlayerSuffix(sender);
-		suffix = BubbleCode.bubblecode(Permission.canBubbleCode(p), Codify.changeFormatSign(suffix)).replaceAll("&([0-9A-FK-OR])", "§$1").replace("&", "§");
+		suffix = BubbleCode.bubblecode(Permission.canBubbleCode(p), ChatColor.translateAlternateColorCodes('&', suffix));
 		group = VaultUtil.permission.getPrimaryGroup(sender);
 		groupPrefix = VaultUtil.chat.getGroupPrefix(world, group).replace("&", "§");
 		groupSuffix = VaultUtil.chat.getGroupSuffix(world, group).replace("&", "§");
 		String displayName = sender.getDisplayName();
-		displayName = BubbleCode.bubblecode(Permission.canBubbleCode(p), Codify.changeFormatSign(displayName)).replaceAll("&([0-9A-FK-OR])", "§$1").replace("&", "§");
+		displayName = BubbleCode.bubblecode(Permission.canBubbleCode(p), ChatColor.translateAlternateColorCodes('&', displayName));
 		String format = "";
 		if(channel != null) {
 			if(Permission.isDistinguished(p)) {
