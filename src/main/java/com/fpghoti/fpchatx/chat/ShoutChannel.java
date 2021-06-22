@@ -1,12 +1,18 @@
 package com.fpghoti.fpchatx.chat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
+import com.fpghoti.fpchatx.event.ShoutChannelChatEvent;
 import com.fpghoti.fpchatx.player.FPlayer;
 
 public class ShoutChannel extends ChatChannel{
@@ -26,8 +32,8 @@ public class ShoutChannel extends ChatChannel{
 	 * 
 	 * Many functions here will do nothing. Shout extends ChatChannel
 	 * for the sake of treating shouts as a form of chat message.
-	*/
-	
+	 */
+
 	public ShoutChannel(FPChat plugin) {
 		super(plugin);
 		this.name = "Shout";
@@ -53,7 +59,7 @@ public class ShoutChannel extends ChatChannel{
 		// No real reason to use this. It will hush the player if called.
 		// Leaving the shout channel is impossible. Standard channel should
 		// be used if the ability to leave is required.
-		
+
 		p.hush();
 	}
 
@@ -121,7 +127,7 @@ public class ShoutChannel extends ChatChannel{
 	public int getRadius() {
 		return 0;
 	}
-	
+
 	@Override
 	public ArrayList<FPlayer> getPlayers(){
 		return FPlayer.getPlayers();
@@ -132,7 +138,7 @@ public class ShoutChannel extends ChatChannel{
 		// No real reason to use this. It will hush the player if called.
 		// Leaving the shout channel is impossible. Standard channel should
 		// be used if the ability to leave is required.
-		
+
 		p.hush();
 	}
 
@@ -141,18 +147,28 @@ public class ShoutChannel extends ChatChannel{
 		// No real reason to use this. It will hush the player if called.
 		// Leaving the shout channel is impossible. Standard channel should
 		// be used if the ability to leave is required.
-		
+
 		p.unhush();
 	}
 
 	@Override
 	public void sendMessage(String msg, FPlayer from) {
-		plugin.log(Level.INFO, "Shout: " + msg);
-		for(FPlayer p : FPlayer.getPlayers()) {
-			if(p.isShoutVisible() && !p.isIgnoring(from)) {
-				p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&4&lS&r&8]&r") + msg);
+		CompletableFuture.runAsync(() -> {
+			plugin.log(Level.INFO, "Shout: " + msg);
+			Set<Player> recipients = new HashSet<Player>();
+			for(FPlayer p : FPlayer.getPlayers()) {
+				if(p.isShoutVisible() && !p.isIgnoring(from)) {
+					recipients.add(p.getPlayer());
+				}
 			}
-		}
+			ShoutChannelChatEvent event = new ShoutChannelChatEvent(true, from.getPlayer(), msg, recipients, this);
+			Bukkit.getPluginManager().callEvent(event);
+			if(!event.isCancelled()) {
+				for(Player recipient : recipients) {
+					recipient.sendMessage(ChatColor.translateAlternateColorCodes('&', "&8[&4&lS&r&8]&r") + msg);
+				}
+			}
+		});
 	}
 
 }

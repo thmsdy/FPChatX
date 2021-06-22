@@ -29,7 +29,7 @@ public class MySQLConnection{
 		port = config.getPort();
 		hikari = new HikariDataSource();
 		hikari.setMaximumPoolSize(10);
-		hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+		hikari.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
 		hikari.addDataSourceProperty("serverName", host);
 		hikari.addDataSourceProperty("user", user);
 		hikari.addDataSourceProperty("password", password);
@@ -55,7 +55,9 @@ public class MySQLConnection{
 				e.printStackTrace();
 			}finally {
 				try {
-					connection.close();
+					if(connection != null) {
+						connection.close();
+					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

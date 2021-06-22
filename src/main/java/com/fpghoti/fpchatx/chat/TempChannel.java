@@ -1,19 +1,24 @@
 package com.fpghoti.fpchatx.chat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import com.fpghoti.fpchatx.FPChat;
+import com.fpghoti.fpchatx.event.TempChannelChatEvent;
 import com.fpghoti.fpchatx.player.FPlayer;
 
 public class TempChannel extends ChatChannel{
-	
+
 	private UUID owner;
-	
+
 	public TempChannel(FPChat plugin, FPlayer owner, String name) {
 		super(plugin);
 		this.name = name;
@@ -22,12 +27,12 @@ public class TempChannel extends ChatChannel{
 		this.distinguishedChatFormat = plugin.getMainConfig().getTempChannelFormat();
 		this.banned = new ArrayList<UUID>();
 	}
-	
+
 	public FPlayer getOwner() {
 		OfflinePlayer p = Bukkit.getOfflinePlayer(owner);
 		return FPlayer.getPlayer(p, !p.isOnline());
 	}
-	
+
 	public boolean isOwner(FPlayer p) {
 		return p.getUniqueId() == this.owner;
 	}
@@ -35,7 +40,7 @@ public class TempChannel extends ChatChannel{
 	public void setOwner(FPlayer p) {
 		this.owner = p.getUniqueId();
 	}
-	
+
 	@Override
 	public boolean isTemp() {
 		return true;
@@ -96,7 +101,7 @@ public class TempChannel extends ChatChannel{
 	public void enableWhitelist() {
 		this.isWhitelisted = true;
 	}
-	
+
 	@Override
 	public void disableWhitelist() {
 		this.isWhitelisted = false;
@@ -111,7 +116,7 @@ public class TempChannel extends ChatChannel{
 	public void whitelistRemove(UUID uuid) {
 		this.whitelist.remove(uuid);
 	}
-	
+
 	@Override
 	public void addBanned(FPlayer p) {
 		this.banned.add(p.getUniqueId());
@@ -132,7 +137,7 @@ public class TempChannel extends ChatChannel{
 	public void setDistinguishedChatFormat(String chatFormat) {
 		this.distinguishedChatFormat = chatFormat;
 	}
-	
+
 	@Override
 	public ArrayList<FPlayer> getPlayers(){
 		ArrayList<FPlayer> players = new ArrayList<FPlayer>();
@@ -143,15 +148,25 @@ public class TempChannel extends ChatChannel{
 		}
 		return players;
 	}
-	
+
 	@Override
 	public void sendMessage(String msg, FPlayer from) {
-		plugin.log(Level.INFO, "[TC] " + name + ": " + msg);
-		for(FPlayer p : FPlayer.getPlayers()) {
-			if(p.getTempChannels().contains(name) && !p.isIgnoring(from)) {
-				p.sendMessage(msg);
+		CompletableFuture.runAsync(() -> {
+			plugin.log(Level.INFO, "[TC] " + name + ": " + msg);
+			Set<Player> recipients = new HashSet<Player>();
+			for(FPlayer p : FPlayer.getPlayers()) {
+				if(p.getTempChannels().contains(name) && !p.isIgnoring(from)) {
+					recipients.add(p.getPlayer());
+				}
 			}
-		}
+			TempChannelChatEvent event = new TempChannelChatEvent(true, from.getPlayer(), msg, recipients, this);
+			Bukkit.getPluginManager().callEvent(event);
+			if(!event.isCancelled()) {
+				for(Player recipient : recipients) {
+					recipient.sendMessage(msg);
+				}
+			}
+		});
 	}
 
 }

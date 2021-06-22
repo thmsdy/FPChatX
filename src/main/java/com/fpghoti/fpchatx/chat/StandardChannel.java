@@ -2,15 +2,20 @@ package com.fpghoti.fpchatx.chat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.config.ChannelFile;
+import com.fpghoti.fpchatx.event.StandardChannelChatEvent;
 import com.fpghoti.fpchatx.player.FPlayer;
 import com.fpghoti.fpchatx.util.Util;
 
@@ -322,22 +327,32 @@ public class StandardChannel extends ChatChannel{
 
 	@Override
 	public void sendMessage(String msg, FPlayer from) {
-		Player pf = Util.getEP(from.getName());
-		plugin.log(Level.INFO, name + ": " + msg);
-		for(FPlayer p : FPlayer.getPlayers()) {
-			if(p.getChannels().contains(name) && !p.isIgnoring(from)) {
-				if(hasRadius) {
-					Player pp = Util.getEP(p.getName());
-					if(pp.getWorld() == pf.getWorld()) {
-						if(pp.getLocation().distance(pf.getLocation()) < chatRadius){
-							p.sendMessage(msg);
+		CompletableFuture.runAsync(() -> {
+			Player pf = Util.getEP(from.getName());
+			plugin.log(Level.INFO, name + ": " + msg);
+			Set<Player> recipients = new HashSet<Player>();
+			for(FPlayer p : FPlayer.getPlayers()) {
+				if(p.getChannels().contains(name) && !p.isIgnoring(from)) {
+					if(hasRadius) {
+						Player pp = Util.getEP(p.getName());
+						if(pp.getWorld() == pf.getWorld()) {
+							if(pp.getLocation().distance(pf.getLocation()) < chatRadius){
+								recipients.add(p.getPlayer());
+							}
 						}
+					}else {
+						recipients.add(p.getPlayer());
 					}
-				}else {
-					p.sendMessage(msg);
 				}
 			}
-		}
+			StandardChannelChatEvent event = new StandardChannelChatEvent(true, from.getPlayer(), msg, recipients, this);
+			Bukkit.getPluginManager().callEvent(event);
+			if(!event.isCancelled()) {
+				for(Player recipient : recipients) {
+					recipient.sendMessage(msg);
+				}
+			}
+		});	
 	}
 
 	public void update(ChannelFile file) {

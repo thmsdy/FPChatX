@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fpghoti</groupId>
 	<artifactId>FPChat</artifactId>
-	<version>1.1.4</version>
+	<version>1.1.6</version>
 	<repositories>
 		<repository>
 			<id>spigot-repo</id>
@@ -77,7 +77,7 @@
 		<dependency>
 			<groupId>com.zaxxer</groupId>
 			<artifactId>HikariCP</artifactId>
-			<version>3.4.5</version>
+			<version>4.0.3</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

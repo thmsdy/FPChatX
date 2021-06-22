@@ -13,11 +13,32 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.fpghoti.fpchatx.FPChat;
 import com.fpghoti.fpchatx.chat.ChatChannel;
+import com.fpghoti.fpchatx.event.FPChatEvent;
 import com.fpghoti.fpchatx.player.FPlayer;
 
 public class PlayerListener implements Listener {
 
 	private boolean enabled = true;
+
+	//	@EventHandler (priority = EventPriority.HIGH)
+	//	public void onPlayerChat(AsyncPlayerChatEvent event) {
+	//		if(enabled) {
+	//			if (event.isCancelled()) {
+	//				return;
+	//			}
+	//			Player sender = event.getPlayer();
+	//			FPlayer p = FPlayer.getPlayer(sender);
+	//			if(p.toTalk() && p.getTalkChannel() != null) {
+	//				p.setTalk(false);
+	//				ChatChannel c = p.getTalkChannel();
+	//				p.setTalkChannel(null);
+	//				p.chat(c, event.getMessage());
+	//			}else {
+	//				p.chat(event.getMessage());
+	//			}
+	//			event.setCancelled(true);
+	//		}
+	//	}
 
 	@EventHandler (priority = EventPriority.HIGH)
 	public void onPlayerChat(AsyncPlayerChatEvent event) {
@@ -27,15 +48,17 @@ public class PlayerListener implements Listener {
 			}
 			Player sender = event.getPlayer();
 			FPlayer p = FPlayer.getPlayer(sender);
-			if(p.toTalk() && p.getTalkChannel() != null) {
-				p.setTalk(false);
-				ChatChannel c = p.getTalkChannel();
-				p.setTalkChannel(null);
-				p.chat(c, event.getMessage());
-			}else {
-				p.chat(event.getMessage());
+			if(!(event instanceof FPChatEvent)) {
+				if(p.toTalk() && p.getTalkChannel() != null) {
+					p.setTalk(false);
+					ChatChannel c = p.getTalkChannel();
+					p.setTalkChannel(null);
+					p.chat(c, event.getMessage());
+				}else {
+					p.chat(event.getMessage());
+				}
+				event.setCancelled(true);
 			}
-			event.setCancelled(true);
 		}
 	}
 
