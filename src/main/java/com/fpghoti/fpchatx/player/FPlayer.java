@@ -440,21 +440,6 @@ public class FPlayer {
 	public void chat(ChatChannel channel, String msg) {
 		channel.sendMessage(formatChat(channel,msg), this);
 	}
-
-//	public void chat(String msg) {
-//		if(toShout) {
-//			toShout = false;
-//			ChatChannel.getShout().sendMessage(formatChat(ChatChannel.getShout(),msg), this);
-//			if(FPChat.getPlugin().getMainConfig().shoutCooldownEnabled()) {
-//				shoutCooldown = FPChat.getPlugin().getMainConfig().getShoutSeconds();
-//			}
-//		}else if(tempspeak) {
-//			getPrimaryTempChannel().sendMessage(formatChat(getPrimaryTempChannel(),msg), this);
-//		}else {
-//			getPrimaryChannel().sendMessage(formatChat(msg), this);
-//		}
-//	}
-
 	
 	public void chat(String msg) {
 		if(toShout) {

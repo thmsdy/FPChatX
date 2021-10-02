@@ -36,6 +36,9 @@ import com.fpghoti.fpchatx.command.commands.LeaveCommand;
 import com.fpghoti.fpchatx.command.commands.ChannelsCommand;
 import com.fpghoti.fpchatx.command.commands.CreateCommand;
 import com.fpghoti.fpchatx.command.commands.MessageCommand;
+import com.fpghoti.fpchatx.command.commands.PlainBroadcastCommand;
+import com.fpghoti.fpchatx.command.commands.PlainBroadcastPlayerCommand;
+import com.fpghoti.fpchatx.command.commands.PlainBroadcastStaffCommand;
 import com.fpghoti.fpchatx.command.commands.PrefixCommand;
 import com.fpghoti.fpchatx.command.commands.ReloadCommand;
 import com.fpghoti.fpchatx.command.commands.ReplyCommand;
@@ -176,6 +179,9 @@ public class FPChat extends JavaPlugin {
 		Commands.register(new RevokeBadgeCommand(this));
 		Commands.register(new GiveBadgeCommand(this));
 		Commands.register(new PrefixCommand(this));
+		Commands.register(new PlainBroadcastCommand(this));
+		Commands.register(new PlainBroadcastPlayerCommand(this));
+		Commands.register(new PlainBroadcastStaffCommand(this));
 	}
 
 	public MainConfig getMainConfig() {

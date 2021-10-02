@@ -69,4 +69,16 @@ commands:
     aliases: [tk]
     description: Set main channel
     usage: /<command> channel
+  plainbroadcast:
+    aliases: [pbc,gbc]
+    description: Sends a plain broadcast to all players.
+    usage: /<command> message
+  plainbroadcastplayer:
+    aliases: [pbcp,gbcp]
+    description: Sends a plain broadcast to a player.
+    usage: /<command> player message
+  plainbroadcaststaff:
+    aliases: [pbcs,gbcs]
+    description: Sends a plain broadcast to a player with permissions fpchat.playerbroadcast.hearstaff and gbc.staff.
+    usage: /<command> message
 

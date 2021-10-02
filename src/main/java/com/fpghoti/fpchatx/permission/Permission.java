@@ -275,4 +275,20 @@ public class Permission {
 		return false;
 	}
 	
+	public static boolean canPlainBroadcast(FPlayer p) {
+		return p.hasPermission("fpchat.plainbroadcast") || p.hasPermission("fpchat.plainbroadcast.*");
+	}
+	
+	public static boolean canPlainPlayerBroadcast(FPlayer p) {
+		return p.hasPermission("fpchat.plainbroadcast.player") || p.hasPermission("fpchat.plainbroadcast.*");
+	}
+	
+	public static boolean canPlainStaffBroadcast(FPlayer p) {
+		return p.hasPermission("fpchat.plainbroadcast.staff") || p.hasPermission("fpchat.plainbroadcast.*");
+	}
+	
+	public static boolean canHearPlainStaffBroadcast(FPlayer p) {
+		return p.hasPermission("fpchat.plainbroadcast.hearstaff") || p.hasPermission("fpchat.plainbroadcast.*");
+	}
+	
 }
