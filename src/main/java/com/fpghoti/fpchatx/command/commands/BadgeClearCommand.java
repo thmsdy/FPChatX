@@ -32,7 +32,7 @@ public class BadgeClearCommand extends Commands {
 		}
 		
 
-		if(!plugin.getMainConfig().mySQLEnabled()) {
+		if(!plugin.getMainConfig().isSQLEnabled()) {
 			FPlayer.errMsg(null, "MySQL is not enabled.");
 			return;
 		}

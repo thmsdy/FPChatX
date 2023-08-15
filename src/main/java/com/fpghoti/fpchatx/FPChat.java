@@ -74,7 +74,7 @@ public class FPChat extends JavaPlugin {
 		vault.setupPermissions();
 		config = new MainConfig(this);
 		pluginTag = config.getPluginTag();
-		if(config.mySQLEnabled()) {
+		if(config.isSQLEnabled()) {
 			sql = new MySQLConnection(this);
 			sql.generate();
 			startTimers();
@@ -100,7 +100,7 @@ public class FPChat extends JavaPlugin {
 		for(FPlayer p : FPlayer.getPlayers()) {
 			p.cleanup();
 		}
-		if(config.mySQLEnabled()) {
+		if(config.isSQLEnabled()) {
 			sql.disconnect();
 		}
 	}
@@ -114,7 +114,7 @@ public class FPChat extends JavaPlugin {
 			refresh.cancel();
 		}
 
-		if(config.mySQLEnabled()) {
+		if(config.isSQLEnabled()) {
 			sql.disconnect();
 		}
 
@@ -124,7 +124,7 @@ public class FPChat extends JavaPlugin {
 		FPlayer.purge();
 		config = new MainConfig(this);
 		pluginTag = config.getPluginTag();
-		if(config.mySQLEnabled()) {
+		if(config.isSQLEnabled()) {
 			sql = new MySQLConnection(this);
 			sql.generate();
 			startTimers();

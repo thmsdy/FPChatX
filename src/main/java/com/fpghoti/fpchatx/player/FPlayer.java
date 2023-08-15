@@ -165,7 +165,7 @@ public class FPlayer {
 				}
 			}
 		}
-		if(FPChat.getPlugin().getMainConfig().mySQLEnabled()) {
+		if(FPChat.getPlugin().getMainConfig().isSQLEnabled()) {
 			this.badgeData = new BadgeData(this);
 		}
 	}

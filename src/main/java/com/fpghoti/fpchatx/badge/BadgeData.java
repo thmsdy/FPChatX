@@ -34,7 +34,7 @@ public class BadgeData {
 	}
 
 	public Badge getBadge(int slot) {
-		if(slot <= 0 || !FPChat.getPlugin().getMainConfig().mySQLEnabled() || slot > FPChat.getPlugin().getMainConfig().getMaxBadgeSlots()) {
+		if(slot <= 0 || !FPChat.getPlugin().getMainConfig().isSQLEnabled() || slot > FPChat.getPlugin().getMainConfig().getMaxBadgeSlots()) {
 			return null;
 		}
 		return slots.get(slot);
@@ -56,7 +56,7 @@ public class BadgeData {
 
 	/**Will equip the badge regardless of the user's permissions.**/
 	public BadgeEquipResult setBadge(int slot, Badge badge) {
-		if(!FPChat.getPlugin().getMainConfig().mySQLEnabled()) {
+		if(!FPChat.getPlugin().getMainConfig().isSQLEnabled()) {
 			return BadgeEquipResult.NO_SQL;
 		}
 		if(slot <= 0 || slot > FPChat.getPlugin().getMainConfig().getMaxBadgeSlots()) {

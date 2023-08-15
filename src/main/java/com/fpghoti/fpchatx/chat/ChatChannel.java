@@ -299,7 +299,7 @@ public abstract class ChatChannel {
 		if(Permission.isStaff(p)){
 			stf = FPChat.getPlugin().getMainConfig().getStaffBadge();
 		}
-		if(plugin.getMainConfig().mySQLEnabled()){
+		if(plugin.getMainConfig().isSQLEnabled()){
 			badges = p.getBadgeData().getAppearanceString();
 		}
 		if(plugin.getMainConfig().chatFilterEnabled()){

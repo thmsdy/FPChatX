@@ -29,16 +29,21 @@ public class MySQLConnection{
 		port = config.getPort();
 		hikari = new HikariDataSource();
 		hikari.setMaximumPoolSize(10);
-		hikari.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
-		hikari.addDataSourceProperty("serverName", host);
 		hikari.addDataSourceProperty("user", user);
 		hikari.addDataSourceProperty("password", password);
-		hikari.addDataSourceProperty("databaseName", database);
-		hikari.addDataSourceProperty("port", port);
+		if(config.useMariaDBDriver()) {
+			hikari.setDataSourceClassName("org.mariadb.jdbc.MariaDbDataSource");
+			hikari.addDataSourceProperty("url", "jdbc:mariadb://"+ host + ":" + port + "/" + database);
+		}else {
+			hikari.setDataSourceClassName("com.mysql.cj.jdbc.MysqlDataSource");
+			hikari.addDataSourceProperty("serverName", host);
+			hikari.addDataSourceProperty("databaseName", database);
+			hikari.addDataSourceProperty("port", port);
+		}
 	}
 
 	public void generate() {
-		if(config.mySQLEnabled()){
+		if(config.isSQLEnabled()){
 			plugin.log(Level.INFO, "Connecting to MySQL...");
 			Connection connection = null;
 			try {
@@ -91,24 +96,24 @@ public class MySQLConnection{
 		if (input == null){
 			return;
 		}
-			Statement statement;
-			Connection connection = null;
+		Statement statement;
+		Connection connection = null;
+		try {
+			connection = hikari.getConnection();
+			statement = connection.createStatement();
+			statement.executeUpdate(input);
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
 			try {
-				connection = hikari.getConnection();
-				statement = connection.createStatement();
-				statement.executeUpdate(input);
-				statement.close();
+				connection.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}finally {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
 			}
+		}
 	}
-	
+
 	public void asyncUpdate(String input){
 		CompletableFuture.runAsync(() -> {
 			update(input);

@@ -34,7 +34,7 @@ public class BadgeEquipCommand extends Commands {
 			return;
 		}
 		
-		if(!plugin.getMainConfig().mySQLEnabled()) {
+		if(!plugin.getMainConfig().isSQLEnabled()) {
 			FPlayer.errMsg(null, "MySQL is not enabled.");
 			return;
 		}

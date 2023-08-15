@@ -25,9 +25,13 @@ public class MainConfig {
 	}
 
 	private void generate(){
-		if (config.get("MySQL")==null) {
-			config.createSection("MySQL");
-			config.set("MySQL", false);
+		if (config.get("SQL")==null) {
+			config.createSection("SQL");
+			config.set("SQL", false);
+		}
+		if (config.get("UseMariaDBDriver")==null){
+			config.createSection("UseMariaDBDriver");
+			config.set("UseMariaDBDriver", true);
 		}
 		if (config.get("Host")==null) {
 			config.createSection("Host");
@@ -133,12 +137,16 @@ public class MainConfig {
 		}
 	}
 
-	public boolean mySQLEnabled() {
-		return config.getBoolean("MySQL");
+	public boolean isSQLEnabled() {
+		return config.getBoolean("SQL");
+	}
+	
+	public boolean useMariaDBDriver() {
+		return config.getBoolean("UseMariaDBDriver");
 	}
 
 	public String getHost() {
-		if(mySQLEnabled()) {
+		if(isSQLEnabled()) {
 			return config.getString("Host");
 		}else {
 			plugin.getLogger().log(Level.SEVERE, "Null SQL host. Is MySQL disabled?");
@@ -147,7 +155,7 @@ public class MainConfig {
 	}
 
 	public String getPort() {
-		if(mySQLEnabled()) {
+		if(isSQLEnabled()) {
 			return config.getString("Port");
 		}else {
 			plugin.getLogger().log(Level.SEVERE, "Null SQL port. Is MySQL disabled?");
@@ -156,7 +164,7 @@ public class MainConfig {
 	}
 
 	public String getUser() {
-		if(mySQLEnabled()) {
+		if(isSQLEnabled()) {
 			return config.getString("User");
 		}else {
 			plugin.getLogger().log(Level.SEVERE, "Null SQL user. Is MySQL disabled?");
@@ -165,7 +173,7 @@ public class MainConfig {
 	}
 
 	public String getPassword() {
-		if(mySQLEnabled()) {
+		if(isSQLEnabled()) {
 			return config.getString("Password");
 		}else {
 			plugin.getLogger().log(Level.SEVERE, "Null SQL password. Is MySQL disabled?");
@@ -174,7 +182,7 @@ public class MainConfig {
 	}
 
 	public String getDatabase() {
-		if(mySQLEnabled()) {
+		if(isSQLEnabled()) {
 			return config.getString("Database");
 		}else {
 			plugin.getLogger().log(Level.SEVERE, "Null SQL database. Is MySQL disabled?");
@@ -183,7 +191,7 @@ public class MainConfig {
 	}
 
 	public String getChatFeatureTable() {
-		if(mySQLEnabled()) {
+		if(isSQLEnabled()) {
 			return config.getString("Chat-Feature-Table");
 		}else {
 			plugin.getLogger().log(Level.SEVERE, "Null SQL chat feature table. Is MySQL disabled?");
@@ -192,7 +200,7 @@ public class MainConfig {
 	}
 
 	public String getPermSyncTable() {
-		if(mySQLEnabled()) {
+		if(isSQLEnabled()) {
 			return config.getString("PermSync-Table");
 		}else {
 			plugin.getLogger().log(Level.SEVERE, "Null SQL perm sync table. Is MySQL disabled?");
